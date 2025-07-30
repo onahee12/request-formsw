@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบรับคำขอ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">ส่งคำขอของคุณ</h1>
+        <div class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">ชื่อ</label>
+                <input type="text" id="name" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="employeeId" class="block text-sm font-medium text-gray-700">รหัสพนักงาน</label>
+                <input type="text" id="employeeId" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="electricity" class="block text-sm font-medium text-gray-700">การไฟฟ้า</label>
+                <select id="electricity" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" disabled selected>เลือกการไฟฟ้า</option>
+                    <option value="การไฟฟ้าลพบุรี">การไฟฟ้าลพบุรี</option>
+                    <option value="การไฟฟ้าท่าวุ้ง">การไฟฟ้าท่าวุ้ง</option>
+                    <option value="การไฟฟ้าหล่มสัก">การไฟฟ้าหล่มสัก</option>
+                </select>
+            </div>
+            <div>
+                <label for="outage" class="block text-sm font-medium text-gray-700">การดับไฟ</label>
+                <select id="outage" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="" disabled selected>เลือกประเภทการดับไฟ</option>
+                    <option value="สวิตชิ่งดับไฟตามปกติ">สวิตชิ่งดับไฟตามปกติ</option>
+                    <option value="สวิตชิ่งด่วน (< 3 วัน)">สวิตชิ่งด่วน (&lt; 3 วัน)</option>
+                </select>
+            </div>
+            <div>
+                <label for="request" class="block text-sm font-medium text-gray-700">รายละเอียดคำขอ</label>
+                <textarea id="request" rows="4" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+            </div>
+            <div>
+                <label for="pdfFile" class="block text-sm font-medium text-gray-700">อัปโหลดไฟล์ PDF</label>
+                <input type="file" id="pdfFile" accept=".pdf" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button onclick="submitRequest()" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">ส่งคำขอ</button>
+        </div>
+        <div id="requestList" class="mt-6 space-y-2"></div>
+    </div>
+
+    <script>
+        let requests = [];
+
+        function submitRequest() {
+            const name = document.getElementById('name').value;
+            const employeeId = document.getElementById('employeeId').value;
+            const electricity = document.getElementById('electricity').value;
+            const outage = document.getElementById('outage').value;
+            const request = document.getElementById('request').value;
+            const pdfFile = document.getElementById('pdfFile').files[0];
+
+            if (name && employeeId && electricity && outage && request) {
+                const requestObj = {
+                    id: Date.now(),
+                    name: name,
+                    employeeId: employeeId,
+                    electricity: electricity,
+                    outage: outage,
+                    request: request,
+                    timestamp: new Date().toLocaleString('th-TH'),
+                    pdfFile: pdfFile ? pdfFile.name : 'ไม่มีไฟล์'
+                };
+                requests.push(requestObj);
+                document.getElementById('name').value = '';
+                document.getElementById('employeeId').value = '';
+                document.getElementById('electricity').value = '';
+                document.getElementById('outage').value = '';
+                document.getElementById('request').value = '';
+                document.getElementById('pdfFile').value = '';
+                updateRequestList();
+            } else {
+                alert('กรุณากรอกชื่อ, รหัสพนักงาน, การไฟฟ้า, ประเภทการดับไฟ และรายละเอียดคำขอ');
+            }
+        }
+
+        function updateRequestList() {
+            const requestList = document.getElementById('requestList');
+            requestList.innerHTML = '';
+            requests.forEach(req => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-gray-50 rounded-md';
+                div.innerHTML = 
+                    <p><strong>ชื่อ:</strong> ${req.name}</p>
+                    <p><strong>รหัสพนักงาน:</strong> ${req.employeeId}</p>
+                    <p><strong>การไฟฟ้า:</strong> ${req.electricity}</p>
+                    <p><strong>การดับไฟ:</strong> ${req.outage}</p>
+                    <p><strong>คำขอ:</strong> ${req.request}</p>
+                    <p><strong>ไฟล์:</strong> ${req.pdfFile}</p>
+                    <p class="text-sm text-gray-500"><strong>เวลา:</strong> ${req.timestamp}</p>
+                ;
+                requestList.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
