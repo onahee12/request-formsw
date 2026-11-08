@@ -14,6 +14,7 @@
   --accent:#3a50e0; --accent-soft:#e4e8fd; --accent-fg:#ffffff; --free:#1f9d62;
   --t-M:#e9a400; --t-A:#ee6c2b; --t-N:#5a4fcf; --t-OT:#c43f8f; --t-MT:#0e8f9a;
   --t-OFF:#7d8aa0; --t-VL:#1f9d62; --t-SL:#de4040; --t-PL:#8a59d1; --t-X:#6f7f23; --t-GOV:#2a6fb0; --t-SW:#9a7b12;
+  --we-bg:#fdf0f3; --we-line:#f5d6de; --we-fg:#c23f5c; --hol-bg:#fff5d9; --hol-line:#f1d991; --hol-fg:#9a6400;
   --font:"Anuphan",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:14px;
 }
@@ -22,12 +23,14 @@
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
   --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
+  --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
   --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
+  --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -257,6 +260,49 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .pr .u{font-size:.75rem;color:var(--muted)}
 .pr.zero .n{color:var(--muted)}
 .rule{grid-column:1 / -1;font-size:.78rem}
+/* v4: vertical day list, readable legend, status cards */
+.ent{align-items:flex-start}
+.ent>.av{margin-top:2px}
+.tcol{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+.tag.miss{background:color-mix(in oklab,var(--tc) 16%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--tc) 40%,transparent)}
+.tag .was{font-size:.66rem;color:var(--muted);text-decoration:line-through;margin-left:1px}
+@media (max-width:620px){.tag .was{display:none}}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;background:var(--card);border-radius:var(--r);padding:14px 16px}
+.lgh{font-size:.74rem;font-weight:600;color:var(--muted);letter-spacing:.03em;margin-bottom:8px}
+.lgr{display:flex;flex-wrap:wrap;gap:8px 14px}
+.lgi{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.legend .tag{font-size:.82rem;padding:3px 9px;gap:5px}
+.legend .tag .ico{font-size:.95rem}
+.legend .tag .tx,.legend .tag .was{display:inline}
+.sa{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px}
+:where(.sa .sac){--tc:var(--muted)}
+.sac{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 11px;font-size:.84rem;min-height:36px;color:var(--fg)}
+.sac .ico{color:var(--tc);font-size:1rem}
+.sac.yes{--tc:var(--free)}
+.sac[aria-pressed=true]{background:var(--tc);border-color:var(--tc);color:#fff;font-weight:600}
+.sac[aria-pressed=true] .ico{color:#fff}
+/* weekend + public holiday highlight */
+.day.we{background:var(--we-bg);border-color:var(--we-line)}
+.day.hol{background:var(--hol-bg);border-color:var(--hol-line)}
+.day.we:hover,.day.hol:hover{border-color:var(--accent)}
+.day.we .dn{color:var(--we-fg)}
+.day.hol .dn{color:var(--hol-fg)}
+.day.today .dn{color:var(--accent-fg)}
+.dtop{display:flex;align-items:center;gap:5px;min-width:0}
+.hn{font-size:.66rem;line-height:1.2;color:var(--hol-fg);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (max-width:620px){.hn{display:none}}
+.rg thead th.we{background:var(--we-bg)}
+.rg thead th.we,.rg thead th.we .d{color:var(--we-fg)}
+.rg thead th.hol{background:var(--hol-bg)}
+.rg thead th.hol,.rg thead th.hol .d{color:var(--hol-fg)}
+.rg td.c.we{background:var(--we-bg)}
+.rg td.c.hol{background:var(--hol-bg)}
+.rg td.c.we:hover,.rg td.c.hol:hover{background:var(--soft)}
+.dsw{display:inline-block;width:24px;height:16px;border-radius:5px;border:1px solid var(--line);background:var(--card)}
+.dsw.we{background:var(--we-bg);border-color:var(--we-line)}
+.dsw.hol{background:var(--hol-bg);border-color:var(--hol-line)}
+.dsw.td{background:var(--accent);border-color:var(--accent);width:16px;border-radius:50%}
+.shol{display:block;font-size:.8rem;font-weight:600;color:var(--hol-fg);margin-top:2px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -383,6 +429,22 @@ const REASONS=[
  {c:'PL',name:'ลากิจ',short:'กิจ',busy:1,leave:1},
  {c:'SW',name:'แลกเวร/คนอื่นขึ้นแทน',short:'แลกเวร',busy:0}
 ];
+// วันหยุดราชการ (เพิ่ม/แก้ได้ที่นี่ รูปแบบ 'ปี-เดือน-วัน':'ชื่อ')
+// 2569: ตามปฏิทินวันหยุดที่ประกาศแล้ว · 2570: ตามปฏิทินเบื้องต้น ครม. อาจประกาศเพิ่ม/เปลี่ยน
+const HOLIDAYS={
+ '2026-01-01':'วันขึ้นปีใหม่','2026-01-02':'ชดเชยวันขึ้นปีใหม่','2026-03-03':'วันมาฆบูชา','2026-04-06':'วันจักรี',
+ '2026-04-13':'วันสงกรานต์','2026-04-14':'วันสงกรานต์','2026-04-15':'วันสงกรานต์','2026-05-04':'วันฉัตรมงคล',
+ '2026-05-11':'วันพืชมงคล','2026-05-31':'วันวิสาขบูชา','2026-06-01':'ชดเชยวันวิสาขบูชา','2026-06-03':'วันเฉลิมฯ พระราชินี',
+ '2026-07-28':'วันเฉลิมฯ ร.10','2026-07-29':'วันอาสาฬหบูชา','2026-07-30':'วันเข้าพรรษา','2026-08-12':'วันแม่แห่งชาติ',
+ '2026-10-13':'วันนวมินทรมหาราช','2026-10-23':'วันปิยมหาราช','2026-12-05':'วันพ่อแห่งชาติ','2026-12-07':'ชดเชยวันพ่อแห่งชาติ',
+ '2026-12-10':'วันรัฐธรรมนูญ','2026-12-31':'วันสิ้นปี',
+ '2027-01-01':'วันขึ้นปีใหม่','2027-02-21':'วันมาฆบูชา','2027-02-22':'ชดเชยวันมาฆบูชา','2027-04-06':'วันจักรี',
+ '2027-04-13':'วันสงกรานต์','2027-04-14':'วันสงกรานต์','2027-04-15':'วันสงกรานต์','2027-05-04':'วันฉัตรมงคล',
+ '2027-05-20':'วันวิสาขบูชา','2027-06-03':'วันเฉลิมฯ พระราชินี','2027-07-18':'วันอาสาฬหบูชา','2027-07-19':'วันเข้าพรรษา',
+ '2027-07-20':'ชดเชยวันอาสาฬหบูชา (รอ ครม.)','2027-07-28':'วันเฉลิมฯ ร.10','2027-08-12':'วันแม่แห่งชาติ',
+ '2027-10-13':'วันนวมินทรมหาราช','2027-10-23':'วันปิยมหาราช','2027-10-25':'ชดเชยวันปิยมหาราช',
+ '2027-12-05':'วันพ่อแห่งชาติ','2027-12-06':'ชดเชยวันพ่อแห่งชาติ','2027-12-10':'วันรัฐธรรมนูญ','2027-12-31':'วันสิ้นปี'
+};
 const SH_=Object.fromEntries(SHIFTS.map(t=>[t.c,t]));
 const AC=Object.fromEntries(ACTS.map(t=>[t.c,t]));
 const RS=Object.fromEntries(REASONS.map(t=>[t.c,t]));
@@ -481,7 +543,20 @@ function setShift(e,c,kind){
   if(kind==='R') e.items=e.items.filter(x=>x!=='OFF');
   return e;
 }
+const LEAVES=['VL','SL','PL'];
+const regularKeys=e=>Object.keys(e.shifts).filter(k=>e.shifts[k].k==='R');
+function actOn(e,c){
+  if(LEAVES.includes(c)){const r=regularKeys(e);if(r.length&&r.every(k=>e.shifts[k].away===c)) return true}
+  return e.items.includes(c);
+}
 function toggleAct(e,c){
+  const reg=regularKeys(e);
+  if(LEAVES.includes(c)&&reg.length){            // ลาในวันที่มีเวรประจำ = เวรนั้นไม่ได้ขึ้น
+    const on=reg.every(k=>e.shifts[k].away===c);
+    reg.forEach(k=>e.shifts[k].away=on?'':c);
+    e.items=e.items.filter(x=>x!==c);
+    return e;
+  }
   if(e.items.includes(c)) e.items=e.items.filter(x=>x!==c);
   else{
     e.items.push(c);
@@ -493,17 +568,18 @@ function toggleAct(e,c){
 
 /* ---------- display helpers ---------- */
 function tagsHtml(d){
+  const one=(cls,c,label,extra,title)=>`<span class="tag t-${c} ${cls}" title="${esc(title)}">${icon(c)}<span class="tx">${label}</span>${extra||''}</span>`;
   let h='';
-  for(const w of d.worked) h+=`<span class="tag t-${w.c}${w.k==='C'?' cv':''}" title="${NAME(w.c)}${w.k==='C'?' (แทน '+fx(w.rate)+')':''}">${icon(w.c)}<span class="tx">${SHORT(w.c)}</span>${w.k==='C'?`<span class="rt">${fx(w.rate)}</span>`:''}</span>`;
-  const reasons=[];
-  for(const x of d.missed){h+=`<span class="tag t-${x.c} void" title="${NAME(x.c)} (ไม่ได้ขึ้น: ${NAME(x.away)})">${icon(x.c)}<span class="tx">${SHORT(x.c)}</span></span>`;if(!reasons.includes(x.away)) reasons.push(x.away)}
-  for(const r of reasons) if(!d.acts.includes(r)) h+=`<span class="tag t-${r}" title="${NAME(r)}">${icon(r)}<span class="tx">${SHORT(r)}</span></span>`;
-  for(const a of d.acts) h+=`<span class="tag t-${a}" title="${NAME(a)}">${icon(a)}<span class="tx">${SHORT(a)}</span></span>`;
+  for(const w of d.worked) if(w.k!=='C') h+=one('',w.c,SHORT(w.c),'',NAME(w.c)+' (ประจำ)');
+  for(const x of d.missed) h+=one('miss',x.away,SHORT(x.away),`<s class="was">${SHORT(x.c)}</s>`,`${NAME(x.c)} ไม่ได้ขึ้น · ${NAME(x.away)}`);
+  for(const w of d.worked) if(w.k==='C') h+=one('cv',w.c,SHORT(w.c),`<span class="rt">${fx(w.rate)}</span>`,`${NAME(w.c)} แทน ${fx(w.rate)}`);
+  for(const a of d.acts) h+=one('',a,SHORT(a),'',NAME(a));
   return h;
 }
 function dayText(d,html){
-  const parts=d.worked.map(w=>NAME(w.c)+(w.k==='C'?` แทน ${fx(w.rate)}`:''))
+  const parts=d.worked.filter(w=>w.k!=='C').map(w=>NAME(w.c))
     .concat(d.missed.map(x=>(html?`<s>${NAME(x.c)}</s>`:NAME(x.c))+` → ${NAME(x.away)}`))
+    .concat(d.worked.filter(w=>w.k==='C').map(w=>`${NAME(w.c)} แทน ${fx(w.rate)}`))
     .concat(d.acts.map(NAME));
   return parts.join(' + ');
 }
@@ -548,18 +624,22 @@ function renderCal(){
     for(const m of S.members){
       const e=ent(m.id,date);if(!e) continue;
       const t=tagsHtml(calc(e));
-      rows+=`<div class="ent">${av(m,'sm')}${t||(e.note?'<span class="tag t-X">✎</span>':'')}</div>`;
+      rows+=`<div class="ent">${av(m,'sm')}<div class="tcol">${t||(e.note?'<span class="tag t-X">✎</span>':'')}</div></div>`;
     }
-    h+=`<button type="button" class="day${wd===0||wd===6?' we':''}${date===todayStr?' today':''}" data-date="${date}" aria-label="${d} ${MONTHS[S.m]}"><span class="dn">${d}</span><div class="ents">${rows}</div></button>`;
+    const hol=HOLIDAYS[date];
+    h+=`<button type="button" class="day${wd===0||wd===6?' we':''}${hol?' hol':''}${date===todayStr?' today':''}" data-date="${date}" aria-label="${d} ${MONTHS[S.m]}${hol?' '+hol:''}"${hol?` title="${esc(hol)}"`:''}><span class="dtop"><span class="dn">${d}</span>${hol?`<span class="hn">${esc(hol)}</span>`:''}</span><div class="ents">${rows}</div></button>`;
   }
   $('calGrid').innerHTML=h;
   $('calGrid').classList.toggle('painting',S.paintOn);
-  $('legend').innerHTML=SHIFTS.map(s=>`<span class="tag t-${s.c}">${icon(s.c)}${s.name}</span>`).join('')
-    +`<span class="tag t-M cv">${icon('M')}<span class="tx">เช้า</span><span class="rt">×1.5</span></span><span class="lg-t">= แทนเวร</span>`
-    +`<span class="tag t-M void">${icon('M')}<span class="tx">เช้า</span></span><span class="lg-t">= มีในตารางแต่ไม่ได้ขึ้น</span>`
-    +'<span class="lg-br"></span>'
-    +ACTS.filter(a=>!a.hidden).map(a=>`<span class="tag t-${a.c}">${icon(a.c)}${a.name}</span>`).join('')
-    +`<span class="tag t-SW">${icon('SW')}แลกเวร</span>`;
+  const lg=(chip,txt)=>`<div class="lgi">${chip}<span>${txt}</span></div>`;
+  $('legend').innerHTML=`
+    <div class="lgg"><div class="lgh">เวร</div><div class="lgr">${SHIFTS.map(x=>lg(`<span class="tag t-${x.c}">${icon(x.c)}<span class="tx">${x.short}</span></span>`,x.hint)).join('')}</div></div>
+    <div class="lgg"><div class="lgh">การขึ้นเวร</div><div class="lgr">
+      ${lg(`<span class="tag t-M cv">${icon('M')}<span class="tx">เช้า</span><span class="rt">×1.5</span></span>`,'แทนเวร พร้อมอัตรา')}
+      ${lg(`<span class="tag t-VL miss">${icon('VL')}<span class="tx">พักร้อน</span><s class="was">เช้า</s></span>`,'มีเวรแต่ไม่ได้ขึ้น')}
+    </div></div>
+    <div class="lgg"><div class="lgh">สีของวัน</div><div class="lgr">${lg('<span class="dsw we"></span>','เสาร์–อาทิตย์')}${lg('<span class="dsw hol"></span>','วันหยุดราชการ')}${lg('<span class="dsw td"></span>','วันนี้')}</div></div>
+    <div class="lgg"><div class="lgh">สถานะอื่น</div><div class="lgr">${ACTS.filter(a=>!a.hidden).concat([RS.SW]).map(a=>lg(`<span class="tag t-${a.c}">${icon(a.c)}<span class="tx">${a.short}</span></span>`,'')).join('')}</div></div>`;
   if(S.loaded&&!S.members.length) status('<b>เริ่มต้นใช้งาน</b> — กดไอคอน <b>สมาชิก</b> มุมขวาบน เพื่อเพิ่มชื่อคุณ แฟน และเพื่อน แล้วเลือกชื่อตัวเองที่ "ฉันคือ"');
   else if(S.loaded) status('');
 }
@@ -571,7 +651,7 @@ function renderGrid(){
   const sel=gridMembers(),n=daysIn(S.y,S.m);
   $('gridPicks').innerHTML=S.members.length?S.members.map(m=>`<button type="button" class="pchip" data-gp="${esc(m.id)}" aria-pressed="${S.gridSel.has(m.id)}">${av(m)}${esc(m.name)}</button>`).join(''):'<span class="muted">ยังไม่มีสมาชิก</span>';
   let head='<thead><tr><th class="nm"></th>';
-  for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),wd=new Date(S.y,S.m,d).getDay();head+=`<th class="${wd===0||wd===6?'we':''}${date===todayStr?' td':''}">${DOW[wd]}<span class="d">${d}</span></th>`}
+  for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),wd=new Date(S.y,S.m,d).getDay();const hol=HOLIDAYS[date];head+=`<th class="${wd===0||wd===6?'we':''}${hol?' hol':''}${date===todayStr?' td':''}"${hol?` title="${esc(hol)}"`:''}>${DOW[wd]}<span class="d">${d}</span></th>`}
   head+='</tr></thead>';
   let body='<tbody>';const free=[];
   for(const m of sel){
@@ -582,7 +662,8 @@ function renderGrid(){
       else if(dd.worked.length>1){inner=`<span class="cell multi t-${dd.worked[0].c}">${dd.worked.map(w=>SHORT(w.c)[0]).join('')}</span>`}
       else if(dd.missed.length){inner=`<span class="cell t-${dd.missed[0].away}">${icon(dd.missed[0].away)}</span>`}
       else if(dd.acts.length){inner=`<span class="cell t-${dd.acts[0]}">${icon(dd.acts[0])}</span>`}
-      body+=`<td class="c" data-date="${date}" data-mid="${esc(m.id)}" title="${esc(dayText(dd))}">${inner}</td>`}
+      const wd2=new Date(S.y,S.m,d).getDay();
+      body+=`<td class="c${HOLIDAYS[date]?' hol':wd2===0||wd2===6?' we':''}" data-date="${date}" data-mid="${esc(m.id)}" title="${esc(dayText(dd))}">${inner}</td>`}
     body+='</tr>';
   }
   if(sel.length){
@@ -652,7 +733,7 @@ function drawSheet(){
   if(SH.kind==='day'){
     const dt=parse(SH.date);
     inner=`<div class="shead"><button class="iconbtn" type="button" data-dstep="-1" aria-label="วันก่อน"><svg class="ico" style="font-size:1.3rem"><use href="#i-left"/></svg></button>
-      <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]}</h3>
+      <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]}${HOLIDAYS[SH.date]?`<span class="shol">${esc(HOLIDAYS[SH.date])}</span>`:''}</h3>
       <button class="iconbtn" type="button" data-dstep="1" aria-label="วันถัดไป"><svg class="ico" style="font-size:1.3rem"><use href="#i-right"/></svg></button></div>
       ${S.members.length?`<div class="who-row">${S.members.map(m=>`<button type="button" class="whob" data-who="${esc(m.id)}" aria-pressed="${m.id===SH.mid}">${av(m)}<span>${esc(m.name)}</span></button>`).join('')}</div>
       <div id="dayBody" style="display:flex;flex-direction:column;gap:14px"></div>
@@ -685,10 +766,13 @@ function drawDayBody(){
           <button type="button" data-sk="${s.c}:R" aria-pressed="${k==='R'}">ประจำ</button>
           <button type="button" data-sk="${s.c}:C" aria-pressed="${k==='C'}">แทน</button>
         </div>
-        ${k==='R'?`<label class="sa"><span>สถานะ</span><select id="sa-${s.c}" data-sa="${s.c}"><option value="">ขึ้นเวรจริง</option>${REASONS.map(x=>`<option value="${x.c}" ${v.away===x.c?'selected':''}>ไม่ได้ขึ้น · ${x.name}</option>`).join('')}</select></label>`:''}
+        ${k==='R'?`<div class="sa" role="group" aria-label="สถานะ${s.name}">
+          <button type="button" class="sac yes" data-sa="${s.c}:" aria-pressed="${!v.away}">${icon('check')}ขึ้นจริง</button>
+          ${REASONS.map(x=>`<button type="button" class="sac t-${x.c}" data-sa="${s.c}:${x.c}" aria-pressed="${v.away===x.c}">${icon(x.c)}${x.short==='แลกเวร'?'แลกเวร':x.name}</button>`).join('')}
+        </div>`:''}
       </div>`}).join('')}</div>
-    <div class="secl">กิจกรรม / สถานะอื่น <span>ลงเพิ่มได้ ไม่กระทบเวรที่ขึ้นจริง</span></div>
-    <div class="tiles">${ACTS.filter(a=>!a.hidden||e.items.includes(a.c)).map(a=>`<button type="button" class="tile t-${a.c}" data-act="${a.c}" aria-pressed="${e.items.includes(a.c)}"><span class="ib">${icon(a.c)}</span><span class="nm">${a.name}</span></button>`).join('')}</div>
+    <div class="secl">กิจกรรม / สถานะอื่น <span>${regularKeys(e).length?'แตะ "ลา" = เวรประจำวันนี้ไม่ได้ขึ้น':'ลงเพิ่มได้ ไม่กระทบเวรที่ขึ้นจริง'}</span></div>
+    <div class="tiles">${ACTS.filter(a=>!a.hidden||e.items.includes(a.c)).map(a=>`<button type="button" class="tile t-${a.c}" data-act="${a.c}" aria-pressed="${actOn(e,a.c)}"><span class="ib">${icon(a.c)}</span><span class="nm">${a.name}</span></button>`).join('')}</div>
     <div class="daysum">${dayText(d,true)||'ยังไม่ได้ลงอะไรในวันนี้'}</div>`;
 }
 function flashSaved(){const s=$('savedMsg');if(s){s.textContent='บันทึกแล้ว ✓';clearTimeout(flashSaved._t);flashSaved._t=setTimeout(()=>{if($('savedMsg'))$('savedMsg').textContent='แตะเพื่อเลือก บันทึกให้อัตโนมัติ'},1500)}}
@@ -789,6 +873,7 @@ document.addEventListener('click',e=>{
   const t=e.target;const q=s=>t.closest(s);let b;
   if(t.id==='scrim'||q('[data-close]')){commitNote();closeSheet();return}
   if(b=q('[data-sk]')){if(!SH) return;const [c,k]=b.dataset.sk.split(':');editDay(x=>setShift(x,c,k));return}
+  if(b=q('[data-sa]')){if(!SH) return;const [c,r]=b.dataset.sa.split(':');editDay(x=>{if(x.shifts[c]) x.shifts[c].away=r||''});return}
   if(b=q('[data-act]')){if(!SH) return;editDay(x=>toggleAct(x,b.dataset.act));return}
   if(b=q('[data-who]')){commitNote();SH.mid=b.dataset.who;drawSheet();return}
   if(b=q('[data-dstep]')){commitNote();SH.date=addDays(SH.date,+b.dataset.dstep);const d=parse(SH.date);if(d.getMonth()!==S.m||d.getFullYear()!==S.y){S.y=d.getFullYear();S.m=d.getMonth();loadData(true);render()}drawSheet();return}
@@ -823,7 +908,6 @@ function commitNote(){
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='noteIn') commitNote();
-  if(t.dataset&&t.dataset.sa&&SH){const c=t.dataset.sa;editDay(x=>{if(x.shifts[c]) x.shifts[c].away=t.value})}
   if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render()}
   if(t.id==='pStart'){SH.start=t.value;SH.confirm=false;drawSheet()}
   if(t.id==='pEnd'){SH.end=t.value;SH.confirm=false;drawSheet()}
