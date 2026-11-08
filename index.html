@@ -303,6 +303,57 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .dsw.hol{background:var(--hol-bg);border-color:var(--hol-line)}
 .dsw.td{background:var(--accent);border-color:var(--accent);width:16px;border-radius:50%}
 .shol{display:block;font-size:.8rem;font-weight:600;color:var(--hol-fg);margin-top:2px}
+/* summary v2 */
+.sums{display:flex!important;flex-direction:column;gap:14px}
+.sh2{font-weight:700;font-size:1rem;margin-bottom:10px}
+.team{background:var(--card);border-radius:var(--r);padding:14px 16px}
+.tscroll{overflow-x:auto}
+.tt{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.tt th{font-size:.76rem;color:var(--muted);font-weight:600;text-align:center;padding:6px 8px;white-space:nowrap;border-bottom:1px solid var(--line)}
+.tt td{text-align:center;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tt tr:last-child td{border-bottom:0}
+.tt td.who{text-align:left;font-weight:600}
+.tt td.who span{display:inline-flex;align-items:center;gap:8px}
+.tt td b{font-size:1rem}
+.z{color:color-mix(in oklab,var(--muted) 60%,transparent)}
+.scs{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.sc{background:var(--card);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.sc-h{display:flex;align-items:center;gap:12px}
+.sc-n{flex:1;min-width:0}
+.sc-n .nm{font-weight:700;font-size:1.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-big{display:flex;flex-direction:column;align-items:flex-end;line-height:1.05}
+.sc-big .v{font-size:2.1rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.sc-big .k{font-size:.74rem;color:var(--muted)}
+.blk{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.bh{font-size:.8rem;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bh .eq{font-weight:500}
+.bh .eq b{color:var(--fg);font-size:.95rem;font-variant-numeric:tabular-nums}
+.mt{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
+.mt th{font-weight:500;padding:0 0 6px;text-align:center;font-size:.8rem;color:var(--muted)}
+.mt th:last-child,.mt td.tot{color:var(--fg);font-weight:700}
+.mt td{text-align:center;padding:7px 4px;font-size:1rem;font-weight:600;background:var(--soft)}
+.mt tr td:first-child{border-radius:10px 0 0 10px}
+.mt tr td:last-child{border-radius:0 10px 10px 0}
+.mt tbody tr+tr td{border-top:4px solid var(--card)}
+.mt td.rl{text-align:left;padding-left:12px;font-size:.82rem;font-weight:500;color:var(--muted)}
+.mh{display:inline-flex;align-items:center;gap:4px}
+.mh .ico{color:var(--tc);font-size:.95rem}
+.foot{font-size:.78rem;color:var(--muted)}
+.empty{font-size:.85rem;color:var(--muted);background:var(--soft);border-radius:10px;padding:10px 12px}
+.rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.rate2{background:color-mix(in oklab,var(--accent) 10%,var(--card));border:1px solid color-mix(in oklab,var(--accent) 30%,transparent);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.rate2 .x{font-size:.8rem;font-weight:700;color:var(--accent)}
+.rate2 .c{font-size:.82rem;color:var(--muted)}
+.rate2 .c b{font-size:1.4rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.rate2.off{background:var(--soft);border-color:transparent}
+.rate2.off .x{color:var(--muted)}
+.rate2.off .c b{color:var(--muted)}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.di{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:10px;padding:6px 10px 6px 6px;min-width:0}
+.di .ib{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:color-mix(in oklab,var(--tc) 22%,var(--card));color:var(--tc);flex:none}
+.di .l{flex:1;font-size:.84rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.di .v{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.di .v b{font-size:1rem;color:var(--fg);font-variant-numeric:tabular-nums}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -571,9 +622,12 @@ function tagsHtml(d){
   const one=(cls,c,label,extra,title)=>`<span class="tag t-${c} ${cls}" title="${esc(title)}">${icon(c)}<span class="tx">${label}</span>${extra||''}</span>`;
   let h='';
   for(const w of d.worked) if(w.k!=='C') h+=one('',w.c,SHORT(w.c),'',NAME(w.c)+' (ประจำ)');
-  for(const x of d.missed) h+=one('miss',x.away,SHORT(x.away),`<s class="was">${SHORT(x.c)}</s>`,`${NAME(x.c)} ไม่ได้ขึ้น · ${NAME(x.away)}`);
+  const shown=new Set();
+  for(const x of d.missed){if(shown.has(x.away)) continue;shown.add(x.away);
+    const which=d.missed.filter(y=>y.away===x.away).map(y=>NAME(y.c)).join(', ');
+    h+=one('',x.away,SHORT(x.away),'',`${NAME(x.away)} · ${which} ไม่ได้ขึ้น`)}
   for(const w of d.worked) if(w.k==='C') h+=one('cv',w.c,SHORT(w.c),`<span class="rt">${fx(w.rate)}</span>`,`${NAME(w.c)} แทน ${fx(w.rate)}`);
-  for(const a of d.acts) h+=one('',a,SHORT(a),'',NAME(a));
+  for(const a of d.acts) if(!shown.has(a)) h+=one('',a,SHORT(a),'',NAME(a));
   return h;
 }
 function dayText(d,html){
@@ -636,7 +690,7 @@ function renderCal(){
     <div class="lgg"><div class="lgh">เวร</div><div class="lgr">${SHIFTS.map(x=>lg(`<span class="tag t-${x.c}">${icon(x.c)}<span class="tx">${x.short}</span></span>`,x.hint)).join('')}</div></div>
     <div class="lgg"><div class="lgh">การขึ้นเวร</div><div class="lgr">
       ${lg(`<span class="tag t-M cv">${icon('M')}<span class="tx">เช้า</span><span class="rt">×1.5</span></span>`,'แทนเวร พร้อมอัตรา')}
-      ${lg(`<span class="tag t-VL miss">${icon('VL')}<span class="tx">พักร้อน</span><s class="was">เช้า</s></span>`,'มีเวรแต่ไม่ได้ขึ้น')}
+      ${lg(`<span class="tag t-VL">${icon('VL')}<span class="tx">พักร้อน</span></span>`,'ลา/ราชการในวันที่มีเวร = ไม่นับเวรนั้น')}
     </div></div>
     <div class="lgg"><div class="lgh">สีของวัน</div><div class="lgr">${lg('<span class="dsw we"></span>','เสาร์–อาทิตย์')}${lg('<span class="dsw hol"></span>','วันหยุดราชการ')}${lg('<span class="dsw td"></span>','วันนี้')}</div></div>
     <div class="lgg"><div class="lgh">สถานะอื่น</div><div class="lgr">${ACTS.filter(a=>!a.hidden).concat([RS.SW]).map(a=>lg(`<span class="tag t-${a.c}">${icon(a.c)}<span class="tx">${a.short}</span></span>`,'')).join('')}</div></div>`;
@@ -680,44 +734,65 @@ function renderGrid(){
 }
 function monthStats(mid){
   const pre=`${S.y}-${pad(S.m+1)}-`;
-  const st={worked:{N:0,M:0,A:0},regular:0,cover:0,coverDays:0,rates:{},missed:{N:0,M:0,A:0},days:{},equiv:0};
+  const z=()=>({N:0,M:0,A:0});
+  const st={reg:z(),cov:z(),missed:z(),rates:{},coverDays:0,days:{},equiv:0};
   [RATE_SINGLE,RATE_DOUBLE,RATE_TRIPLE].forEach(r=>st.rates[r]=0);
   for(const e of S.entries.values()){
     if(e.member!==mid||!e.date.startsWith(pre)) continue;
-    const d=calc(e);
-    let anyCover=false;
-    for(const w of d.worked){st.worked[w.c]++;if(w.k==='C'){st.cover++;anyCover=true;st.rates[w.rate]=(st.rates[w.rate]||0)+1;st.equiv+=w.rate}else st.regular++}
+    const d=calc(e);let anyCover=false;
+    for(const w of d.worked){
+      if(w.k==='C'){st.cov[w.c]++;anyCover=true;st.rates[w.rate]=(st.rates[w.rate]||0)+1;st.equiv+=w.rate}
+      else st.reg[w.c]++;
+    }
     if(anyCover) st.coverDays++;
-    const codes=new Set(d.acts.concat(d.missed.map(x=>x.away)));
     for(const x of d.missed) st.missed[x.c]++;
-    codes.forEach(c=>st.days[c]=(st.days[c]||0)+1);          // นับเป็น "วัน"
+    new Set(d.acts.concat(d.missed.map(x=>x.away))).forEach(c=>st.days[c]=(st.days[c]||0)+1);
   }
-  st.total=st.regular+st.cover;
+  const sum=o=>o.N+o.M+o.A;
+  st.regular=sum(st.reg);st.cover=sum(st.cov);st.total=st.regular+st.cover;st.missedN=sum(st.missed);
   st.leave=['VL','SL','PL'].reduce((s,c)=>s+(st.days[c]||0),0);
   return st;
 }
 function renderSum(){
   if(!S.members.length){$('sums').innerHTML='<div class="notice">ยังไม่มีสมาชิก</div>';return}
-  $('sums').innerHTML=S.members.map(m=>{
-    const st=monthStats(m.id);
-    const shiftChips=SHIFTS.filter(s=>st.worked[s.c]).map(s=>`<span class="tag t-${s.c}">${icon(s.c)}${s.short} <b>${st.worked[s.c]}</b></span>`).join('');
-    const dayChips=['OFF','GOV','MT','VL','SL','PL','SW','X','OT'].filter(c=>st.days[c]).map(c=>`<span class="tag t-${c}">${icon(c)}${SHORT(c)} <b>${st.days[c]}</b></span>`).join('');
-    const miss=SHIFTS.filter(s=>st.missed[s.c]);
-    const rates=Object.keys(st.rates).map(Number).sort((a,b)=>a-b).filter(r=>st.rates[r]||r!==RATE_SINGLE);
-    return `<article class="sum"><div class="top">${av(m,'lg')}<div style="min-width:0"><div class="nm">${esc(m.name)}</div><div class="muted">${MONTHS[S.m]} ${S.y+543}</div></div></div>
-      <div class="kpis">
-        <div class="kpi"><div class="v">${st.total}</div><div class="k">ขึ้นเวรจริง</div></div>
-        <div class="kpi"><div class="v">${st.cover}</div><div class="k">แทนเวร · ${st.coverDays} วัน</div></div>
-        <div class="kpi"><div class="v">${st.leave}</div><div class="k">วันลา</div></div>
+  const all=S.members.map(m=>({m,st:monthStats(m.id)}));
+  const n1=v=>v?v:'<span class="z">–</span>';
+  const rateKeys=[RATE_SINGLE,RATE_DOUBLE,RATE_TRIPLE];
+  // ภาพรวมทั้งกลุ่ม
+  const team=all.length>1?`<section class="team">
+    <div class="sh2">ภาพรวมทั้งกลุ่ม · ${MONTHS[S.m]} ${S.y+543}</div>
+    <div class="tscroll"><table class="tt">
+      <thead><tr><th></th><th>ขึ้นเวรจริง</th><th>แทนเวร</th><th>เทียบเท่า</th><th>วันหยุด</th><th>วันลา</th><th>ราชการ</th></tr></thead>
+      <tbody>${all.map(({m,st})=>`<tr><td class="who"><span>${av(m,'sm')}${esc(m.name)}</span></td><td><b>${st.total}</b></td><td>${n1(st.cover)}</td><td>${st.cover?st.equiv.toFixed(1):n1(0)}</td><td>${n1(st.days.OFF||0)}</td><td>${n1(st.leave)}</td><td>${n1(st.days.GOV||0)}</td></tr>`).join('')}</tbody>
+    </table></div></section>`:'';
+  const cards=all.map(({m,st})=>{
+    const stat=[['OFF','วันหยุด'],['VL','ลาพักผ่อน'],['SL','ลาป่วย'],['PL','ลากิจ'],['GOV','ไปราชการ'],['MT','ประชุม/อบรม'],['SW','แลกเวร'],['X','ธุระอื่น'],['OT','OT']].filter(([c])=>st.days[c]);
+    const missTxt=SHIFTS.filter(x=>st.missed[x.c]).map(x=>`${x.short} ${st.missed[x.c]}`).join(', ');
+    return `<article class="sc">
+      <header class="sc-h">${av(m,'lg')}<div class="sc-n"><div class="nm">${esc(m.name)}</div><div class="muted">${MONTHS[S.m]} ${S.y+543}</div></div>
+        <div class="sc-big"><span class="v">${st.total}</span><span class="k">เวรที่ขึ้นจริง</span></div></header>
+
+      <div class="blk"><div class="bh">เวรที่ขึ้น</div>
+        <table class="mt"><thead><tr><th></th>${SHIFTS.map(x=>`<th><span class="mh t-${x.c}">${icon(x.c)}${x.short}</span></th>`).join('')}<th>รวม</th></tr></thead>
+        <tbody>
+          <tr><td class="rl">ประจำ</td>${SHIFTS.map(x=>`<td>${n1(st.reg[x.c])}</td>`).join('')}<td class="tot">${st.regular}</td></tr>
+          <tr><td class="rl">แทน</td>${SHIFTS.map(x=>`<td>${n1(st.cov[x.c])}</td>`).join('')}<td class="tot">${st.cover}</td></tr>
+        </tbody></table>
+        ${st.missedN?`<div class="foot">มีในตารางแต่ไม่ได้ขึ้น ${st.missedN} เวร (${missTxt}) · ไม่นับรวม</div>`:''}
       </div>
-      <div class="pay">
-        <div class="pay-h"><span>ค่าตอบแทนแทนเวร</span><span class="muted">เทียบเท่า <b>${st.equiv.toFixed(1)}</b> เวร</span></div>
-        <div class="pay-r">${rates.map(r=>`<div class="pr${st.rates[r]?'':' zero'}"><span class="x">${fx(r)}</span><span class="n">${st.rates[r]||0}</span><span class="u">เวร</span></div>`).join('')}</div>
+
+      <div class="blk pay2"><div class="bh">ค่าตอบแทนแทนเวร ${st.cover?`<span class="eq">เทียบเท่า <b>${st.equiv.toFixed(1)}</b> เวร</span>`:''}</div>
+        ${st.cover?`<div class="rates">${rateKeys.filter(r=>st.rates[r]||r!==RATE_SINGLE).map(r=>`<div class="rate2${st.rates[r]?'':' off'}"><span class="x">${fx(r)}</span><span class="c"><b>${st.rates[r]||0}</b> เวร</span></div>`).join('')}</div>
+          <div class="foot">แทนเวร ${st.cover} ครั้ง ใน ${st.coverDays} วัน</div>`
+          :'<div class="empty">เดือนนี้ไม่มีแทนเวร</div>'}
       </div>
-      ${shiftChips||dayChips?`<div class="breakdown">${shiftChips}${dayChips}</div>`:'<div class="muted">เดือนนี้ยังไม่ได้ลงอะไร</div>'}
-      <div class="missed">เวรประจำ ${st.regular} · แทน ${st.cover}${miss.length?` · ไม่ได้ขึ้นตามตาราง: ${miss.map(s=>`${s.short} ${st.missed[s.c]}`).join(', ')} (ไม่นับ)`:''}</div>
-    </article>`}).join('')
-    +`<div class="rule muted">วิธีคิด: นับในวันเดียวกัน ดึก → เช้า → บ่าย · ขึ้น 2 เวร เวรแทนได้ ${fx(RATE_DOUBLE)} · ขึ้นครบ 3 เวร เวรสุดท้ายได้ ${fx(RATE_TRIPLE)} · แทนเวรเดี่ยว ${fx(RATE_SINGLE)}</div>`;
+
+      <div class="blk"><div class="bh">วันหยุด · ลา · กิจกรรม</div>
+        ${stat.length?`<div class="dl">${stat.map(([c,label])=>`<div class="di t-${c}"><span class="ib">${icon(c)}</span><span class="l">${label}</span><span class="v"><b>${st.days[c]}</b> วัน</span></div>`).join('')}</div>`:'<div class="empty">ไม่มี</div>'}
+      </div>
+    </article>`}).join('');
+  $('sums').innerHTML=team+`<div class="scs">${cards}</div>`
+    +`<div class="rule muted">วิธีคิดค่าตอบแทน: นับในวันเดียวกัน ดึก → เช้า → บ่าย · ขึ้น 2 เวร เวรแทนได้ ${fx(RATE_DOUBLE)} · ขึ้นครบ 3 เวร เวรสุดท้ายได้ ${fx(RATE_TRIPLE)} · แทนเวรเดี่ยว ${fx(RATE_SINGLE)}</div>`;
 }
 
 /* ---------- sheets ---------- */
@@ -939,6 +1014,8 @@ function normalize(e){
     if(SH_[x]){if(!shifts[x]) shifts[x]={k:'R',away:RS[e.away]?e.away:''}}
     else if(AC[x]&&!items.includes(x)) items.push(x);
   }
+  const reasons=new Set(Object.values(shifts).map(v=>v.away).filter(Boolean));
+  items=items.filter(x=>!reasons.has(x));
   return {member:e.member,date:e.date,shifts,items,note:e.note||''};
 }
 let loadSeq=0;
