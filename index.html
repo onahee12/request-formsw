@@ -14,7 +14,7 @@
   --accent:#3a50e0; --accent-soft:#e4e8fd; --accent-fg:#ffffff; --free:#1f9d62;
   --t-M:#e9a400; --t-A:#ee6c2b; --t-N:#5a4fcf; --t-OT:#c43f8f; --t-MT:#0e8f9a;
   --t-OFF:#7d8aa0; --t-VL:#1f9d62; --t-SL:#de4040; --t-PL:#8a59d1; --t-X:#6f7f23; --t-GOV:#2a6fb0; --t-SW:#9a7b12;
-  --we-bg:#fdf0f3; --we-line:#f5d6de; --we-fg:#c23f5c; --hol-bg:#fff5d9; --hol-line:#f1d991; --hol-fg:#9a6400;
+  --t-KU:#c93f73; --t-KL:#a0582c; --r15:#f7c62f; --r15-fg:#3b2b00; --r30:#7b4fe0; --r30-fg:#ffffff; --we-bg:#fdf0f3; --we-line:#f5d6de; --we-fg:#c23f5c; --hol-bg:#fff5d9; --hol-line:#f1d991; --hol-fg:#9a6400;
   --font:"Anuphan",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:14px;
 }
@@ -23,14 +23,14 @@
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
   --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
-  --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
+  --t-KU:#f07aa8; --t-KL:#e39a6a; --r15:#e8b51c; --r15-fg:#1f1600; --r30:#8f6cff; --r30-fg:#ffffff; --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
   --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
-  --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
+  --t-KU:#f07aa8; --t-KL:#e39a6a; --r15:#e8b51c; --r15-fg:#1f1600; --r30:#8f6cff; --r30-fg:#ffffff; --we-bg:#2a1c24; --we-line:#4a2e3b; --we-fg:#f28ca3; --hol-bg:#2b2513; --hol-line:#56481b; --hol-fg:#f2c45a;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -354,6 +354,37 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .di .l{flex:1;font-size:.84rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .di .v{font-size:.78rem;color:var(--muted);white-space:nowrap}
 .di .v b{font-size:1rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.tag.mv{gap:3px}
+.tag.mv .fr{display:inline-flex;align-items:center;gap:3px;color:var(--muted)}
+.tag.mv .fr .ico{color:var(--muted)}
+.tag.mv .ar{color:var(--muted);font-size:.7rem}
+.actions .viewtg{margin-left:auto}
+.viewtg[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent)}
+.tt tr.me td{background:var(--accent-soft)}
+.tt tr.me td:first-child{border-radius:10px 0 0 10px}.tt tr.me td:last-child{border-radius:0 10px 10px 0}
+/* cover rate colours */
+.tag.cv.r15{background:var(--r15);color:var(--r15-fg);box-shadow:none;font-weight:600}
+.tag.cv.r30{background:var(--r30);color:var(--r30-fg);box-shadow:none;font-weight:600}
+.tag.cv.r15 .ico{color:var(--r15-fg)}
+.tag.cv.r30 .ico{color:var(--r30-fg)}
+.tag.cv.r10{box-shadow:inset 0 0 0 1.5px var(--accent);background:var(--card)}
+.cell.cv.r15{background:var(--r15);color:var(--r15-fg);box-shadow:none}
+.cell.cv.r30{background:var(--r30);color:var(--r30-fg);box-shadow:none}
+.cell.cv.r10{box-shadow:inset 0 0 0 2px var(--accent)}
+.rate2.r15{background:color-mix(in oklab,var(--r15) 22%,var(--card));border-color:var(--r15)}
+.rate2.r15 .x{color:color-mix(in oklab,var(--r15) 55%,var(--fg))}
+.rate2.r30{background:color-mix(in oklab,var(--r30) 16%,var(--card));border-color:var(--r30)}
+.rate2.r30 .x{color:var(--r30)}
+.rate2.off{background:var(--soft);border-color:transparent}
+.rate2.off .x{color:var(--muted)}
+.srow .rate.r15{background:var(--r15);color:var(--r15-fg);padding:0 6px;border-radius:6px}
+.srow .rate.r30{background:var(--r30);color:var(--r30-fg);padding:0 6px;border-radius:6px}
+.legend .tag{overflow:visible;flex:none}
+.lgi{flex-wrap:wrap}
+.t-KU{--tc:var(--t-KU)}.t-KL{--tc:var(--t-KL)}
+.srow.dis{opacity:.55}
+.segm button:disabled{opacity:.4;cursor:not-allowed}
+.blk-note{grid-column:1 / -1;font-size:.76rem;color:var(--muted)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -372,6 +403,8 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
   <symbol id="i-X" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></symbol>
   <symbol id="i-GOV" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10M19 21V10M9 21v-7M15 21v-7M2 10l10-6 10 6z"/></symbol>
   <symbol id="i-SW" viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h13M17 12l4 4-4 4M21 16H8"/></symbol>
+  <symbol id="i-KU" viewBox="0 0 24 24"><path d="M12 3c-3.2 4.2-6 7.3-6 10.6a6 6 0 0 0 12 0C18 10.3 15.2 7.2 12 3z"/><path d="M12 17v-5M9.8 14l2.2-2.2 2.2 2.2"/></symbol>
+  <symbol id="i-KL" viewBox="0 0 24 24"><path d="M12 3c-3.2 4.2-6 7.3-6 10.6a6 6 0 0 0 12 0C18 10.3 15.2 7.2 12 3z"/><path d="M12 11v5M9.8 14l2.2 2.2 2.2-2.2"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.3.6 3.5 2.6 3.5 5.8"/></symbol>
@@ -420,6 +453,7 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
     <div class="actions">
       <button class="pill primary" type="button" id="paintBtn"><svg class="ico"><use href="#i-brush"/></svg>ลงหลายวัน</button>
       <button class="pill" type="button" id="patternBtn"><svg class="ico"><use href="#i-repeat"/></svg>ลงเวรเป็นรอบ</button>
+      <button class="pill viewtg" type="button" id="allBtn" aria-pressed="false" hidden><svg class="ico"><use href="#i-users"/></svg><span>ดูทุกคน</span></button>
     </div>
     <div class="cal" id="calGrid"></div>
     <div class="legend" id="legend"></div>
@@ -496,7 +530,16 @@ const HOLIDAYS={
  '2027-10-13':'วันนวมินทรมหาราช','2027-10-23':'วันปิยมหาราช','2027-10-25':'ชดเชยวันปิยมหาราช',
  '2027-12-05':'วันพ่อแห่งชาติ','2027-12-06':'ชดเชยวันพ่อแห่งชาติ','2027-12-10':'วันรัฐธรรมนูญ','2027-12-31':'วันสิ้นปี'
 };
-const SH_=Object.fromEntries(SHIFTS.map(t=>[t.c,t]));
+// เวรไต: ลงได้เฉพาะ "ประจำ" วันละอย่าง · ขึ้นบ่ายประจำต่อได้ · ทับเวลาเช้า/ดึก
+const KIDNEY=[
+ {c:'KU',name:'เวรไตบน',short:'ไตบน',hint:'08.00–18.00'},
+ {c:'KL',name:'เวรไตล่าง',short:'ไตล่าง',hint:'06.00–17.00'}
+];
+const ALLSH=SHIFTS.concat(KIDNEY);
+const isK=c=>c==='KU'||c==='KL';
+const hasK=e=>!!(e&&e.shifts&&(e.shifts.KU||e.shifts.KL));
+const ABBR={N:'ด',M:'ช',A:'บ',KU:'ตบ',KL:'ตล'};
+const SH_=Object.fromEntries(ALLSH.map(t=>[t.c,t]));
 const AC=Object.fromEntries(ACTS.map(t=>[t.c,t]));
 const RS=Object.fromEntries(REASONS.map(t=>[t.c,t]));
 const NAME=c=>(SH_[c]||AC[c]||RS[c]||{name:c}).name;
@@ -521,6 +564,8 @@ const fmt=dt=>ymd(dt.getFullYear(),dt.getMonth(),dt.getDate());
 const addDays=(s,k)=>{const d=parse(s);d.setDate(d.getDate()+k);return fmt(d)};
 const icon=c=>`<svg class="ico"><use href="#i-${c}"/></svg>`;
 const fx=r=>'×'+r.toFixed(1);
+// สีของเวรแทน: เหลือง = ×1.5, ม่วง = ×3.0, ขอบน้ำเงิน = ×1.0
+const rc=r=>r>=RATE_TRIPLE?'r30':r>=RATE_DOUBLE?'r15':'r10';
 const now=new Date();const todayStr=fmt(now);
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
@@ -528,13 +573,15 @@ function ini(n){const s=[...String(n||'').trim()];let i=0;while(i<s.length-1&&'�
 const av=(m,cls='')=>`<span class="av ${cls}" style="--pc:${esc(m.color)}">${esc(ini(m.name))}</span>`;
 const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
 
-const S={members:[],entries:new Map(),me:lsGet('roster.me')||'',view:lsGet('roster.view')||'cal',
+const S={members:[],entries:new Map(),me:lsGet('roster.me')||'',showAll:lsGet('roster.all')==='1',view:lsGet('roster.view')||'cal',
   y:now.getFullYear(),m:now.getMonth(),paint:null,paintOn:false,gridSel:null,loaded:false,sb:null,code:'',ch:null,dirty:0};
 if(!['cal','grid','sum'].includes(S.view)) S.view='cal';
 
 function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;t.classList.toggle('up',S.paintOn);clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2400)}
 function status(html){const s=$('status');if(!html){s.hidden=true;return}s.innerHTML=html;s.hidden=false}
 const memberById=id=>S.members.find(m=>m.id===id);
+// เลือกชื่อที่ "ฉันคือ" แล้ว = ปฏิทินแสดงเฉพาะคนนั้น (กด "ดูทุกคน" เพื่อดูรวม)
+const viewMembers=()=>{const me=memberById(S.me);return me&&!S.showAll?[me]:S.members};
 
 /* ---------- entry model ----------
    entry = {member, date, shifts:{N|M|A:{k:'R'|'C', away:''|GOV|VL|SL|PL|SW}}, items:[ACT codes], note} */
@@ -555,6 +602,10 @@ function calc(e){
     if(w.k!=='C'){w.rate=0;return}
     w.rate=(n===3&&i===2)?RATE_TRIPLE:(n>=2?RATE_DOUBLE:RATE_SINGLE);
   });
+  const kw=[],km=[];
+  for(const s of KIDNEY){const v=e.shifts[s.c];if(!v) continue;
+    if(v.away) km.push({c:s.c,away:v.away}); else kw.push({c:s.c,k:'R',rate:0})}
+  out.worked=kw.concat(out.worked);out.missed=km.concat(out.missed);
   out.acts=(e.items||[]).filter(c=>AC[c]);
   return out;
 }
@@ -583,37 +634,43 @@ async function saveE(e,quiet){
   try{await run;S.dirty=Date.now();ping();return true}
   catch(err){
     if(prev) S.entries.set(key,prev); else S.entries.delete(key);
-    if(!quiet) toast(String(err&&err.message||'').includes('invalid_')?'ฐานข้อมูลยังเป็นรุ่นเก่า กรุณารัน supabase-update-v3.sql':'บันทึกไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
+    if(!quiet) toast(String(err&&err.message||'').includes('invalid_')?'ฐานข้อมูลยังเป็นรุ่นเก่า กรุณารัน supabase-update-v4.sql':'บันทึกไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
     renderMain();return false;
   }
 }
 // ตั้งเวร: kind = '' (ไม่มี) | 'R' | 'C'
 function setShift(e,c,kind){
+  if(c==='K'){delete e.shifts.KU;delete e.shifts.KL;return e}
+  if(isK(c)&&kind){
+    kind='R';
+    for(const k of ['KU','KL','N','M']) if(k!==c) delete e.shifts[k];
+    if(e.shifts.A&&e.shifts.A.k==='C') delete e.shifts.A;
+  } else if(kind&&hasK(e)&&(c==='N'||c==='M'||kind==='C')) return e;   // ทับเวลาเวรไต
   if(!kind) delete e.shifts[c];
   else{const old=e.shifts[c];e.shifts[c]={k:kind,away:kind==='R'&&old&&old.k==='R'?old.away||'':''}}
   if(kind==='R') e.items=e.items.filter(x=>x!=='OFF');
   return e;
 }
 const LEAVES=['VL','SL','PL'];
+const MARK=['VL','SL','PL','GOV'];   // ลา/ราชการ ในวันที่มีเวรประจำ = เวรประจำนั้นไม่ได้ขึ้น
 const regularKeys=e=>Object.keys(e.shifts).filter(k=>e.shifts[k].k==='R');
 function actOn(e,c){
-  if(LEAVES.includes(c)){const r=regularKeys(e);if(r.length&&r.every(k=>e.shifts[k].away===c)) return true}
-  return e.items.includes(c);
+  if(e.items.includes(c)) return true;
+  return MARK.includes(c)&&regularKeys(e).some(k=>e.shifts[k].away===c);
 }
 function toggleAct(e,c){
-  const reg=regularKeys(e);
-  if(LEAVES.includes(c)&&reg.length){            // ลาในวันที่มีเวรประจำ = เวรนั้นไม่ได้ขึ้น
-    const on=reg.every(k=>e.shifts[k].away===c);
-    reg.forEach(k=>e.shifts[k].away=on?'':c);
+  if(actOn(e,c)){
     e.items=e.items.filter(x=>x!==c);
+    if(MARK.includes(c)) regularKeys(e).forEach(k=>{if(e.shifts[k].away===c) e.shifts[k].away=''});
     return e;
   }
-  if(e.items.includes(c)) e.items=e.items.filter(x=>x!==c);
-  else{
-    e.items.push(c);
-    if(c==='OFF') for(const k of Object.keys(e.shifts)) if(e.shifts[k].k==='R') delete e.shifts[k];
-    e.items=ACTS.map(a=>a.c).filter(x=>e.items.includes(x));
-  }
+  const reg=regularKeys(e);
+  if(MARK.includes(c)&&reg.length){
+    reg.forEach(k=>{if(!e.shifts[k].away) e.shifts[k].away=c});
+    if(c==='GOV') e.items.push(c);   // เก็บราชการไว้ด้วย เผื่อเปลี่ยนเวรกลับเป็น "ขึ้นจริง" (เช่น ขึ้นดึกแล้วเช้าไปราชการ)
+  } else e.items.push(c);
+  if(c==='OFF') for(const k of Object.keys(e.shifts)) if(e.shifts[k].k==='R') delete e.shifts[k];
+  e.items=ACTS.map(a=>a.c).filter(x=>e.items.includes(x));
   return e;
 }
 
@@ -622,11 +679,9 @@ function tagsHtml(d){
   const one=(cls,c,label,extra,title)=>`<span class="tag t-${c} ${cls}" title="${esc(title)}">${icon(c)}<span class="tx">${label}</span>${extra||''}</span>`;
   let h='';
   for(const w of d.worked) if(w.k!=='C') h+=one('',w.c,SHORT(w.c),'',NAME(w.c)+' (ประจำ)');
-  const shown=new Set();
-  for(const x of d.missed){if(shown.has(x.away)) continue;shown.add(x.away);
-    const which=d.missed.filter(y=>y.away===x.away).map(y=>NAME(y.c)).join(', ');
-    h+=one('',x.away,SHORT(x.away),'',`${NAME(x.away)} · ${which} ไม่ได้ขึ้น`)}
-  for(const w of d.worked) if(w.k==='C') h+=one('cv',w.c,SHORT(w.c),`<span class="rt">${fx(w.rate)}</span>`,`${NAME(w.c)} แทน ${fx(w.rate)}`);
+  const shown=new Set(d.missed.map(x=>x.away));
+  for(const x of d.missed) h+=`<span class="tag t-${x.away} mv" title="${esc(NAME(x.c)+' ไม่ได้ขึ้น · '+NAME(x.away))}"><span class="fr">${icon(x.c)}<span class="tx">${SHORT(x.c)}</span></span><span class="ar">→</span>${icon(x.away)}<span class="tx">${SHORT(x.away)}</span></span>`;
+  for(const w of d.worked) if(w.k==='C') h+=one('cv '+rc(w.rate),w.c,SHORT(w.c),'',`${NAME(w.c)} แทน ${fx(w.rate)}`);
   for(const a of d.acts) if(!shown.has(a)) h+=one('',a,SHORT(a),'',NAME(a));
   return h;
 }
@@ -675,22 +730,28 @@ function renderCal(){
   for(let i=0;i<first;i++) h+='<div class="day blank"></div>';
   for(let d=1;d<=n;d++){
     const date=ymd(S.y,S.m,d),wd=(first+d-1)%7;let rows='';
-    for(const m of S.members){
+    const vm=viewMembers(),solo=vm.length===1;
+    for(const m of vm){
       const e=ent(m.id,date);if(!e) continue;
       const t=tagsHtml(calc(e));
-      rows+=`<div class="ent">${av(m,'sm')}<div class="tcol">${t||(e.note?'<span class="tag t-X">✎</span>':'')}</div></div>`;
+      rows+=`<div class="ent">${solo?'':av(m,'sm')}<div class="tcol">${t||(e.note?'<span class="tag t-X">✎</span>':'')}</div></div>`;
     }
     const hol=HOLIDAYS[date];
     h+=`<button type="button" class="day${wd===0||wd===6?' we':''}${hol?' hol':''}${date===todayStr?' today':''}" data-date="${date}" aria-label="${d} ${MONTHS[S.m]}${hol?' '+hol:''}"${hol?` title="${esc(hol)}"`:''}><span class="dtop"><span class="dn">${d}</span>${hol?`<span class="hn">${esc(hol)}</span>`:''}</span><div class="ents">${rows}</div></button>`;
   }
   $('calGrid').innerHTML=h;
+  const ab=$('allBtn'),me=memberById(S.me);
+  if(ab){ab.hidden=!me||S.members.length<2;ab.setAttribute('aria-pressed',S.showAll);
+    ab.querySelector('span').textContent=S.showAll?'ดูทุกคน':'ดูเฉพาะ '+(me?me.name:'');}
   $('calGrid').classList.toggle('painting',S.paintOn);
   const lg=(chip,txt)=>`<div class="lgi">${chip}<span>${txt}</span></div>`;
   $('legend').innerHTML=`
-    <div class="lgg"><div class="lgh">เวร</div><div class="lgr">${SHIFTS.map(x=>lg(`<span class="tag t-${x.c}">${icon(x.c)}<span class="tx">${x.short}</span></span>`,x.hint)).join('')}</div></div>
+    <div class="lgg"><div class="lgh">เวร</div><div class="lgr">${ALLSH.map(x=>lg(`<span class="tag t-${x.c}">${icon(x.c)}<span class="tx">${x.short}</span></span>`,x.hint)).join('')}</div></div>
     <div class="lgg"><div class="lgh">การขึ้นเวร</div><div class="lgr">
-      ${lg(`<span class="tag t-M cv">${icon('M')}<span class="tx">เช้า</span><span class="rt">×1.5</span></span>`,'แทนเวร พร้อมอัตรา')}
-      ${lg(`<span class="tag t-VL">${icon('VL')}<span class="tx">พักร้อน</span></span>`,'ลา/ราชการในวันที่มีเวร = ไม่นับเวรนั้น')}
+      ${lg(`<span class="tag t-M cv r15">${icon('M')}<span class="tx">เช้า</span></span>`,'แทน ×1.5')}
+      ${lg(`<span class="tag t-A cv r30">${icon('A')}<span class="tx">บ่าย</span></span>`,'แทน ×3.0')}
+      ${lg(`<span class="tag t-M cv r10">${icon('M')}<span class="tx">เช้า</span></span>`,'แทน ×1.0')}
+      ${lg(`<span class="tag t-VL mv"><span class="fr">${icon('A')}<span class="tx">บ่าย</span></span><span class="ar">→</span>${icon('VL')}<span class="tx">พักร้อน</span></span>`,'มีเวรแต่ไม่ได้ขึ้น (ไม่นับเวรนี้)')}
     </div></div>
     <div class="lgg"><div class="lgh">สีของวัน</div><div class="lgr">${lg('<span class="dsw we"></span>','เสาร์–อาทิตย์')}${lg('<span class="dsw hol"></span>','วันหยุดราชการ')}${lg('<span class="dsw td"></span>','วันนี้')}</div></div>
     <div class="lgg"><div class="lgh">สถานะอื่น</div><div class="lgr">${ACTS.filter(a=>!a.hidden).concat([RS.SW]).map(a=>lg(`<span class="tag t-${a.c}">${icon(a.c)}<span class="tx">${a.short}</span></span>`,'')).join('')}</div></div>`;
@@ -712,8 +773,8 @@ function renderGrid(){
     body+=`<tr><td class="nm"><span>${av(m,'sm')}${esc(m.name)}</span></td>`;
     for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),dd=dayOf(m.id,date);
       let inner='';
-      if(dd.worked.length===1){const w=dd.worked[0];inner=`<span class="cell t-${w.c}${w.k==='C'?' cv':''}">${icon(w.c)}</span>`}
-      else if(dd.worked.length>1){inner=`<span class="cell multi t-${dd.worked[0].c}">${dd.worked.map(w=>SHORT(w.c)[0]).join('')}</span>`}
+      if(dd.worked.length===1){const w=dd.worked[0];inner=`<span class="cell t-${w.c}${w.k==='C'?' cv '+rc(w.rate):''}">${icon(w.c)}</span>`}
+      else if(dd.worked.length>1){inner=`<span class="cell multi t-${dd.worked[0].c}">${dd.worked.map(w=>ABBR[w.c]||SHORT(w.c)[0]).join('')}</span>`}
       else if(dd.missed.length){inner=`<span class="cell t-${dd.missed[0].away}">${icon(dd.missed[0].away)}</span>`}
       else if(dd.acts.length){inner=`<span class="cell t-${dd.acts[0]}">${icon(dd.acts[0])}</span>`}
       const wd2=new Date(S.y,S.m,d).getDay();
@@ -734,7 +795,7 @@ function renderGrid(){
 }
 function monthStats(mid){
   const pre=`${S.y}-${pad(S.m+1)}-`;
-  const z=()=>({N:0,M:0,A:0});
+  const z=()=>({N:0,M:0,A:0,KU:0,KL:0});
   const st={reg:z(),cov:z(),missed:z(),rates:{},coverDays:0,days:{},equiv:0};
   [RATE_SINGLE,RATE_DOUBLE,RATE_TRIPLE].forEach(r=>st.rates[r]=0);
   for(const e of S.entries.values()){
@@ -748,7 +809,7 @@ function monthStats(mid){
     for(const x of d.missed) st.missed[x.c]++;
     new Set(d.acts.concat(d.missed.map(x=>x.away))).forEach(c=>st.days[c]=(st.days[c]||0)+1);
   }
-  const sum=o=>o.N+o.M+o.A;
+  const sum=o=>o.N+o.M+o.A+o.KU+o.KL;
   st.regular=sum(st.reg);st.cover=sum(st.cov);st.total=st.regular+st.cover;st.missedN=sum(st.missed);
   st.leave=['VL','SL','PL'].reduce((s,c)=>s+(st.days[c]||0),0);
   return st;
@@ -758,31 +819,34 @@ function renderSum(){
   const all=S.members.map(m=>({m,st:monthStats(m.id)}));
   const n1=v=>v?v:'<span class="z">–</span>';
   const rateKeys=[RATE_SINGLE,RATE_DOUBLE,RATE_TRIPLE];
+  const vids0=new Set(viewMembers().map(m=>m.id));
   // ภาพรวมทั้งกลุ่ม
   const team=all.length>1?`<section class="team">
     <div class="sh2">ภาพรวมทั้งกลุ่ม · ${MONTHS[S.m]} ${S.y+543}</div>
     <div class="tscroll"><table class="tt">
       <thead><tr><th></th><th>ขึ้นเวรจริง</th><th>แทนเวร</th><th>เทียบเท่า</th><th>วันหยุด</th><th>วันลา</th><th>ราชการ</th></tr></thead>
-      <tbody>${all.map(({m,st})=>`<tr><td class="who"><span>${av(m,'sm')}${esc(m.name)}</span></td><td><b>${st.total}</b></td><td>${n1(st.cover)}</td><td>${st.cover?st.equiv.toFixed(1):n1(0)}</td><td>${n1(st.days.OFF||0)}</td><td>${n1(st.leave)}</td><td>${n1(st.days.GOV||0)}</td></tr>`).join('')}</tbody>
+      <tbody>${all.map(({m,st})=>`<tr class="${vids0.has(m.id)&&vids0.size===1?'me':''}"><td class="who"><span>${av(m,'sm')}${esc(m.name)}</span></td><td><b>${st.total}</b></td><td>${n1(st.cover)}</td><td>${st.cover?st.equiv.toFixed(1):n1(0)}</td><td>${n1(st.days.OFF||0)}</td><td>${n1(st.leave)}</td><td>${n1(st.days.GOV||0)}</td></tr>`).join('')}</tbody>
     </table></div></section>`:'';
-  const cards=all.map(({m,st})=>{
+  const vids=new Set(viewMembers().map(m=>m.id));
+  const cards=all.filter(({m})=>vids.has(m.id)).map(({m,st})=>{
     const stat=[['OFF','วันหยุด'],['VL','ลาพักผ่อน'],['SL','ลาป่วย'],['PL','ลากิจ'],['GOV','ไปราชการ'],['MT','ประชุม/อบรม'],['SW','แลกเวร'],['X','ธุระอื่น'],['OT','OT']].filter(([c])=>st.days[c]);
-    const missTxt=SHIFTS.filter(x=>st.missed[x.c]).map(x=>`${x.short} ${st.missed[x.c]}`).join(', ');
+    const cols=SHIFTS.concat(KIDNEY.filter(k=>st.reg[k.c]||st.missed[k.c]));
+    const missTxt=ALLSH.filter(x=>st.missed[x.c]).map(x=>`${x.short} ${st.missed[x.c]}`).join(', ');
     return `<article class="sc">
       <header class="sc-h">${av(m,'lg')}<div class="sc-n"><div class="nm">${esc(m.name)}</div><div class="muted">${MONTHS[S.m]} ${S.y+543}</div></div>
         <div class="sc-big"><span class="v">${st.total}</span><span class="k">เวรที่ขึ้นจริง</span></div></header>
 
       <div class="blk"><div class="bh">เวรที่ขึ้น</div>
-        <table class="mt"><thead><tr><th></th>${SHIFTS.map(x=>`<th><span class="mh t-${x.c}">${icon(x.c)}${x.short}</span></th>`).join('')}<th>รวม</th></tr></thead>
+        <table class="mt"><thead><tr><th></th>${cols.map(x=>`<th><span class="mh t-${x.c}">${icon(x.c)}${x.short}</span></th>`).join('')}<th>รวม</th></tr></thead>
         <tbody>
-          <tr><td class="rl">ประจำ</td>${SHIFTS.map(x=>`<td>${n1(st.reg[x.c])}</td>`).join('')}<td class="tot">${st.regular}</td></tr>
-          <tr><td class="rl">แทน</td>${SHIFTS.map(x=>`<td>${n1(st.cov[x.c])}</td>`).join('')}<td class="tot">${st.cover}</td></tr>
+          <tr><td class="rl">ประจำ</td>${cols.map(x=>`<td>${n1(st.reg[x.c])}</td>`).join('')}<td class="tot">${st.regular}</td></tr>
+          <tr><td class="rl">แทน</td>${cols.map(x=>`<td>${n1(st.cov[x.c])}</td>`).join('')}<td class="tot">${st.cover}</td></tr>
         </tbody></table>
         ${st.missedN?`<div class="foot">มีในตารางแต่ไม่ได้ขึ้น ${st.missedN} เวร (${missTxt}) · ไม่นับรวม</div>`:''}
       </div>
 
       <div class="blk pay2"><div class="bh">ค่าตอบแทนแทนเวร ${st.cover?`<span class="eq">เทียบเท่า <b>${st.equiv.toFixed(1)}</b> เวร</span>`:''}</div>
-        ${st.cover?`<div class="rates">${rateKeys.filter(r=>st.rates[r]||r!==RATE_SINGLE).map(r=>`<div class="rate2${st.rates[r]?'':' off'}"><span class="x">${fx(r)}</span><span class="c"><b>${st.rates[r]||0}</b> เวร</span></div>`).join('')}</div>
+        ${st.cover?`<div class="rates">${rateKeys.filter(r=>st.rates[r]||r!==RATE_SINGLE).map(r=>`<div class="rate2 ${rc(r)}${st.rates[r]?'':' off'}"><span class="x">${fx(r)}</span><span class="c"><b>${st.rates[r]||0}</b> เวร</span></div>`).join('')}</div>
           <div class="foot">แทนเวร ${st.cover} ครั้ง ใน ${st.coverDays} วัน</div>`
           :'<div class="empty">เดือนนี้ไม่มีแทนเวร</div>'}
       </div>
@@ -833,19 +897,36 @@ function drawDayBody(){
   const rateOf=c=>{const w=d.worked.find(x=>x.c===c);return w&&w.k==='C'?w.rate:null};
   box.innerHTML=`<div class="secl">เวรวันนี้ <span>เรียงตามเวลา ดึก → เช้า → บ่าย</span></div>
     <div class="srows">${SHIFTS.map(s=>{const v=e.shifts[s.c],k=v?v.k:'',r=rateOf(s.c);
-      return `<div class="srow t-${s.c}${k?' on':''}">
+      const kd=hasK(e),blockAll=kd&&(s.c==='N'||s.c==='M'),blockC=kd;
+      return `<div class="srow t-${s.c}${k?' on':''}${blockAll?' dis':''}">
         <span class="ib">${icon(s.c)}</span>
-        <div class="si"><b>${s.name}</b><span class="hint">${s.hint}${r?` · <span class="rate">แทน ${fx(r)}</span>`:''}</span></div>
+        <div class="si"><b>${s.name}</b><span class="hint">${s.hint}${r?` · <span class="rate ${rc(r)}">แทน ${fx(r)}</span>`:''}</span></div>
         <div class="segm" role="group" aria-label="${s.name}">
           <button type="button" data-sk="${s.c}:" aria-pressed="${!k}">ไม่มี</button>
-          <button type="button" data-sk="${s.c}:R" aria-pressed="${k==='R'}">ประจำ</button>
-          <button type="button" data-sk="${s.c}:C" aria-pressed="${k==='C'}">แทน</button>
+          <button type="button" data-sk="${s.c}:R" aria-pressed="${k==='R'}" ${blockAll?'disabled':''}>ประจำ</button>
+          <button type="button" data-sk="${s.c}:C" aria-pressed="${k==='C'}" ${blockC?'disabled':''}>แทน</button>
         </div>
+        ${blockAll?'<div class="blk-note">ทับเวลาเวรไต</div>':''}
         ${k==='R'?`<div class="sa" role="group" aria-label="สถานะ${s.name}">
           <button type="button" class="sac yes" data-sa="${s.c}:" aria-pressed="${!v.away}">${icon('check')}ขึ้นจริง</button>
           ${REASONS.map(x=>`<button type="button" class="sac t-${x.c}" data-sa="${s.c}:${x.c}" aria-pressed="${v.away===x.c}">${icon(x.c)}${x.short==='แลกเวร'?'แลกเวร':x.name}</button>`).join('')}
         </div>`:''}
       </div>`}).join('')}</div>
+    ${(()=>{const kc=e.shifts.KU?'KU':e.shifts.KL?'KL':'',v=kc?e.shifts[kc]:null;
+      return `<div class="secl">เวรไต <span>ลงเป็นประจำเท่านั้น · ขึ้นบ่ายประจำต่อได้</span></div>
+      <div class="srow t-${kc||'KU'}${kc?' on':''}">
+        <span class="ib">${icon(kc||'KU')}</span>
+        <div class="si"><b>${kc?NAME(kc):'เวรไต'}</b><span class="hint">${kc?SH_[kc].hint:'ไตบน 08.00–18.00 · ไตล่าง 06.00–17.00'}</span></div>
+        <div class="segm" role="group" aria-label="เวรไต">
+          <button type="button" data-sk="K:" aria-pressed="${!kc}">ไม่มี</button>
+          <button type="button" data-sk="KU:R" aria-pressed="${kc==='KU'}">ไตบน</button>
+          <button type="button" data-sk="KL:R" aria-pressed="${kc==='KL'}">ไตล่าง</button>
+        </div>
+        ${kc?`<div class="sa" role="group" aria-label="สถานะเวรไต">
+          <button type="button" class="sac yes" data-sa="${kc}:" aria-pressed="${!v.away}">${icon('check')}ขึ้นจริง</button>
+          ${REASONS.map(x=>`<button type="button" class="sac t-${x.c}" data-sa="${kc}:${x.c}" aria-pressed="${v.away===x.c}">${icon(x.c)}${x.short==='แลกเวร'?'แลกเวร':x.name}</button>`).join('')}
+        </div>`:''}
+      </div>`})()}
     <div class="secl">กิจกรรม / สถานะอื่น <span>${regularKeys(e).length?'แตะ "ลา" = เวรประจำวันนี้ไม่ได้ขึ้น':'ลงเพิ่มได้ ไม่กระทบเวรที่ขึ้นจริง'}</span></div>
     <div class="tiles">${ACTS.filter(a=>!a.hidden||e.items.includes(a.c)).map(a=>`<button type="button" class="tile t-${a.c}" data-act="${a.c}" aria-pressed="${actOn(e,a.c)}"><span class="ib">${icon(a.c)}</span><span class="nm">${a.name}</span></button>`).join('')}</div>
     <div class="daysum">${dayText(d,true)||'ยังไม่ได้ลงอะไรในวันนี้'}</div>`;
@@ -867,7 +948,7 @@ function openPattern(){
 function patternHtml(){
   const me=memberById(S.me);
   const days=SH.start&&SH.end&&SH.end>=SH.start?Math.round((parse(SH.end)-parse(SH.start))/864e5)+1:0;
-  const opts=['M','A','N','OFF'];
+  const opts=['M','A','N','KU','KL','OFF'];
   return `<div class="shead"><span style="width:34px"></span><h3>ลงเวรประจำเป็นรอบ</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
     <div class="muted" style="display:flex;align-items:center;gap:6px">ลงให้ ${av(me,'sm')}<b style="color:var(--fg)">${esc(me.name)}</b></div>
     <div><div class="muted" style="margin-bottom:6px">รูปแบบสำเร็จรูป</div><div class="presets">${PRESETS.map((p,i)=>`<button class="pill" type="button" data-preset="${i}">${p.name}</button>`).join('')}</div></div>
@@ -889,7 +970,7 @@ async function applyPattern(){
     const keep={};for(const k of Object.keys(e.shifts)) if(e.shifts[k].k==='C') keep[k]=e.shifts[k];
     e.shifts=keep;e.items=e.items.filter(x=>x!=='OFF');
     if(code==='OFF') e.items=ACTS.map(a=>a.c).filter(x=>x==='OFF'||e.items.includes(x));
-    else{const old=(ent(S.me,d)||{shifts:{}}).shifts[code];e.shifts[code]={k:'R',away:old&&old.k==='R'?old.away||'':''}}
+    else{const old=(ent(S.me,d)||{shifts:{}}).shifts[code];setShift(e,code,'R');e.shifts[code]={k:'R',away:old&&old.k==='R'?old.away||'':''}}
     rows.push(e);d=addDays(d,1);i++;
   }
   try{
@@ -927,6 +1008,7 @@ async function addMember(){
 /* paint (ลงหลายวัน) */
 const PAINT=[
   ...SHIFTS.map(s=>({id:'R:'+s.c,c:s.c,label:s.short+' (ประจำ)'})),
+  ...KIDNEY.map(s=>({id:'R:'+s.c,c:s.c,label:s.short})),
   ...SHIFTS.map(s=>({id:'C:'+s.c,c:s.c,label:s.short+' (แทน)',cv:1})),
   ...ACTS.filter(a=>!a.hidden).map(a=>({id:'A:'+a.c,c:a.c,label:a.name}))
 ];
@@ -939,7 +1021,9 @@ function drawPaint(){
 function paintDay(date){
   const [t,c]=S.paint.split(':');const e=getE(S.me,date);
   if(t==='A') toggleAct(e,c);
-  else{const kind=t==='R'?'R':'C';setShift(e,c,e.shifts[c]&&e.shifts[c].k===kind?'':kind)}
+  else{const kind=t==='R'?'R':'C';
+    if(!isK(c)&&hasK(e)&&(c==='N'||c==='M'||kind==='C')){toast('วันนั้นมีเวรไต ทับเวลากัน');return}
+    setShift(e,c,e.shifts[c]&&e.shifts[c].k===kind?'':kind)}
   saveE(e);
 }
 
@@ -998,6 +1082,7 @@ $('prevBtn').onclick=()=>shiftMonth(-1);$('nextBtn').onclick=()=>shiftMonth(1);
 $('monthTitle').onclick=()=>{S.y=now.getFullYear();S.m=now.getMonth();loadData(true);render()};
 $('manageBtn').onclick=openMembers;
 $('patternBtn').onclick=openPattern;
+$('allBtn').onclick=()=>{S.showAll=!S.showAll;lsSet('roster.all',S.showAll?'1':'0');renderMain()};
 $('paintBtn').onclick=()=>{if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}S.paintOn=true;S.paint=S.paint||'R:M';drawPaint();renderCal()};
 
 /* ---------- data ---------- */
@@ -1008,14 +1093,12 @@ function range(){
 // แปลงข้อมูลรุ่นเก่า (ถ้ายังไม่ได้รัน migration) ให้อยู่ในรูปแบบใหม่
 function normalize(e){
   const shifts={};const src=e.shifts&&typeof e.shifts==='object'?e.shifts:{};
-  for(const s of SHIFTS){const v=src[s.c];if(v&&(v.k==='R'||v.k==='C')) shifts[s.c]={k:v.k,away:RS[v.away]?v.away:''}}
+  for(const s of ALLSH){const v=src[s.c];if(v&&(v.k==='R'||(v.k==='C'&&!isK(s.c)))) shifts[s.c]={k:v.k,away:RS[v.away]?v.away:''}}
   let items=[];
   for(const x of (e.items||[])){
     if(SH_[x]){if(!shifts[x]) shifts[x]={k:'R',away:RS[e.away]?e.away:''}}
     else if(AC[x]&&!items.includes(x)) items.push(x);
   }
-  const reasons=new Set(Object.values(shifts).map(v=>v.away).filter(Boolean));
-  items=items.filter(x=>!reasons.has(x));
   return {member:e.member,date:e.date,shifts,items,note:e.note||''};
 }
 let loadSeq=0;
