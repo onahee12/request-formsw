@@ -13,7 +13,7 @@
   --bg:#f2f4f9; --card:#ffffff; --soft:#e8ecf5; --fg:#1b2238; --muted:#69728a; --line:#dde2ee;
   --accent:#3a50e0; --accent-soft:#e4e8fd; --accent-fg:#ffffff; --free:#1f9d62;
   --t-M:#e9a400; --t-A:#ee6c2b; --t-N:#5a4fcf; --t-OT:#c43f8f; --t-MT:#0e8f9a;
-  --t-OFF:#7d8aa0; --t-VL:#1f9d62; --t-SL:#de4040; --t-PL:#8a59d1; --t-X:#6f7f23;
+  --t-OFF:#7d8aa0; --t-VL:#1f9d62; --t-SL:#de4040; --t-PL:#8a59d1; --t-X:#6f7f23; --t-GOV:#2a6fb0; --t-SW:#9a7b12;
   --font:"Anuphan",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:14px;
 }
@@ -21,13 +21,13 @@
   --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
-  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a;
+  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
   --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
   --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
-  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a;
+  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a; --t-GOV:#6fb1f0; --t-SW:#d9bc4f;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -42,7 +42,15 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .muted{color:var(--muted);font-size:.86rem}
 .ico{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .t-M{--tc:var(--t-M)}.t-A{--tc:var(--t-A)}.t-N{--tc:var(--t-N)}.t-OT{--tc:var(--t-OT)}.t-MT{--tc:var(--t-MT)}
-.t-OFF{--tc:var(--t-OFF)}.t-VL{--tc:var(--t-VL)}.t-SL{--tc:var(--t-SL)}.t-PL{--tc:var(--t-PL)}.t-X{--tc:var(--t-X)}
+.t-OFF{--tc:var(--t-OFF)}.t-VL{--tc:var(--t-VL)}.t-SL{--tc:var(--t-SL)}.t-PL{--tc:var(--t-PL)}.t-X{--tc:var(--t-X)}.t-GOV{--tc:var(--t-GOV)}.t-SW{--tc:var(--t-SW)}
+.tag.void{position:relative;background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--tc) 35%,transparent)}
+.tag.void .ico{color:var(--muted)}
+.tag.void .tx{text-decoration:line-through}
+.tag.void::after{content:"";position:absolute;left:2px;right:2px;top:50%;border-top:1.5px solid var(--muted);transform:rotate(-14deg)}
+.cell.void{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+.secl{font-size:.82rem;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.secl span{font-weight:400}
+.missed{font-size:.8rem;color:var(--muted)}
 .av{--pc:#888;display:inline-grid;place-items:center;border-radius:50%;background:var(--pc);color:#fff;font-weight:600;flex:none;width:28px;height:28px;font-size:.85rem;line-height:1}
 .av.sm{width:16px;height:16px;font-size:.6rem}
 .av.lg{width:40px;height:40px;font-size:1.1rem}
@@ -213,6 +221,42 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .gate h1{font-size:1.4rem}
 .gate .err{color:var(--t-SL);font-size:.86rem;min-height:1.2em}
 .linkbtn{color:var(--muted);text-decoration:underline;font-size:.85rem;align-self:flex-start}
+/* per-shift model */
+.tag.cv{box-shadow:inset 0 0 0 1.5px var(--tc);background:color-mix(in oklab,var(--tc) 26%,var(--card))}
+.tag .rt{font-weight:700;font-size:.66rem;color:var(--fg);font-variant-numeric:tabular-nums}
+.cell.cv{box-shadow:inset 0 0 0 2px var(--tc)}
+.pbt.cvb{border-style:dashed;border-color:var(--tc)}
+.pbt.cvb[aria-pressed=true]{border-style:solid}
+.lg-t{font-size:.78rem;color:var(--muted);align-self:center;margin-right:6px}
+.lg-br{flex-basis:100%;height:0}
+.srows{display:flex;flex-direction:column;gap:8px}
+.srow{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 10px;background:var(--soft);border-radius:14px;padding:8px 10px;border:2px solid transparent}
+.srow.on{background:color-mix(in oklab,var(--tc) 10%,var(--card));border-color:color-mix(in oklab,var(--tc) 45%,transparent)}
+.srow .ib{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:color-mix(in oklab,var(--tc) 22%,var(--card));color:var(--tc);font-size:1.15rem}
+.srow.on .ib{background:var(--tc);color:#fff}
+.srow .si{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.srow .si b{font-size:.95rem}
+.srow .hint{font-size:.75rem;color:var(--muted)}
+.srow .rate{color:var(--fg);font-weight:700}
+.segm{display:flex;background:var(--card);border-radius:10px;padding:2px;gap:2px;border:1px solid var(--line)}
+.segm button{padding:6px 10px;border-radius:8px;font-size:.85rem;color:var(--muted);font-weight:500;min-height:34px}
+.segm button[aria-pressed=true]{background:var(--tc);color:#fff;font-weight:600}
+.segm button:first-child[aria-pressed=true]{background:var(--soft);color:var(--fg)}
+.sa{grid-column:1 / -1;display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted)}
+.sa select{flex:1;min-width:0;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 10px;min-height:38px}
+@media (max-width:420px){.srow{grid-template-columns:auto 1fr}.segm{grid-column:1 / -1}}
+.tiles .tile .nm{font-size:.9rem}
+.daysum{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.88rem}
+.pay{background:var(--soft);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.pay-h{display:flex;justify-content:space-between;gap:8px;font-size:.82rem;font-weight:600;flex-wrap:wrap}
+.pay-h b{color:var(--fg);font-variant-numeric:tabular-nums}
+.pay-r{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pr{background:var(--card);border-radius:10px;padding:6px 8px;display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}
+.pr .x{font-size:.78rem;color:var(--muted);font-weight:600;width:100%}
+.pr .n{font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.pr .u{font-size:.75rem;color:var(--muted)}
+.pr.zero .n{color:var(--muted)}
+.rule{grid-column:1 / -1;font-size:.78rem}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -229,6 +273,8 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
   <symbol id="i-SL" viewBox="0 0 24 24"><path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z"/></symbol>
   <symbol id="i-PL" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></symbol>
   <symbol id="i-X" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></symbol>
+  <symbol id="i-GOV" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10M19 21V10M9 21v-7M15 21v-7M2 10l10-6 10 6z"/></symbol>
+  <symbol id="i-SW" viewBox="0 0 24 24"><path d="M7 4L3 8l4 4M3 8h13M17 12l4 4-4 4M21 16H8"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.3.6 3.5 2.6 3.5 5.8"/></symbol>
@@ -306,20 +352,42 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 /* ===== ตั้งค่า Supabase: เอามาจาก Project Settings > API ===== */
 const SUPABASE_URL='https://ovjjkyuacizbclbklipl.supabase.co';
 const SUPABASE_KEY='sb_publishable_yAWqi_fZroYKa1378qzG1Q_nHOdQwry';
+/* ===== อัตราค่าตอบแทนแทนเวร (แก้ได้) ===== */
+const RATE_SINGLE=1.0;   // แทนเวรเดี่ยว ๆ ในวันนั้น (เช่น มาแทนในวันหยุด)
+const RATE_DOUBLE=1.5;   // วันนั้นขึ้น 2 เวรขึ้นไป: เวรแทนได้ 1.5 เท่า
+const RATE_TRIPLE=3.0;   // วันนั้นขึ้นครบ 3 เวร: เวรสุดท้าย (บ่าย) ได้ 3 เท่า
 /* ============================================================== */
-const TYPES=[
- {c:'M',name:'เวรเช้า',short:'เช้า',hint:'08–16',busy:1,shift:1},
- {c:'A',name:'เวรบ่าย',short:'บ่าย',hint:'16–24',busy:1,shift:1},
- {c:'N',name:'เวรดึก',short:'ดึก',hint:'00–08',busy:1,shift:1},
- {c:'OT',name:'OT / เวรเสริม',short:'OT',hint:'เวรเพิ่ม',busy:1,shift:1},
- {c:'MT',name:'ประชุม/อบรม',short:'ประชุม',hint:'งานนอกเวร',busy:1},
- {c:'OFF',name:'วันหยุด',short:'หยุด',hint:'ว่าง',busy:0,whole:1},
- {c:'VL',name:'ลาพักผ่อน',short:'พักร้อน',hint:'ว่าง',busy:0,whole:1,leave:1},
- {c:'SL',name:'ลาป่วย',short:'ป่วย',hint:'ทั้งวัน',busy:1,whole:1,leave:1},
- {c:'PL',name:'ลากิจ',short:'กิจ',hint:'ทั้งวัน',busy:1,whole:1,leave:1},
- {c:'X',name:'ธุระอื่น',short:'อื่นๆ',hint:'ไม่ว่าง',busy:1}
+
+// เวรเรียงตามเวลาในหนึ่งวัน: ดึก → เช้า → บ่าย แล้วตัดเป็นวันใหม่
+const SHIFTS=[
+ {c:'N',name:'เวรดึก',short:'ดึก',hint:'00–08'},
+ {c:'M',name:'เวรเช้า',short:'เช้า',hint:'08–16'},
+ {c:'A',name:'เวรบ่าย',short:'บ่าย',hint:'16–24'}
 ];
-const T=Object.fromEntries(TYPES.map(t=>[t.c,t]));
+// กิจกรรม/สถานะอื่นของวัน (ลงเพิ่มได้ ไม่กระทบเวรที่ขึ้นจริง)
+const ACTS=[
+ {c:'OFF',name:'วันหยุด',short:'หยุด',busy:0},
+ {c:'GOV',name:'ไปราชการ',short:'ราชการ',busy:1},
+ {c:'MT',name:'ประชุม/อบรม',short:'ประชุม',busy:1},
+ {c:'VL',name:'ลาพักผ่อน',short:'พักร้อน',busy:0,leave:1},
+ {c:'SL',name:'ลาป่วย',short:'ป่วย',busy:1,leave:1},
+ {c:'PL',name:'ลากิจ',short:'กิจ',busy:1,leave:1},
+ {c:'X',name:'ธุระอื่น',short:'อื่นๆ',busy:1},
+ {c:'OT',name:'OT (ข้อมูลเก่า)',short:'OT',busy:1,hidden:1}
+];
+// เหตุที่ไม่ได้ขึ้นเวรประจำ
+const REASONS=[
+ {c:'GOV',name:'ไปราชการ',short:'ราชการ',busy:1},
+ {c:'VL',name:'ลาพักผ่อน',short:'พักร้อน',busy:0,leave:1},
+ {c:'SL',name:'ลาป่วย',short:'ป่วย',busy:1,leave:1},
+ {c:'PL',name:'ลากิจ',short:'กิจ',busy:1,leave:1},
+ {c:'SW',name:'แลกเวร/คนอื่นขึ้นแทน',short:'แลกเวร',busy:0}
+];
+const SH_=Object.fromEntries(SHIFTS.map(t=>[t.c,t]));
+const AC=Object.fromEntries(ACTS.map(t=>[t.c,t]));
+const RS=Object.fromEntries(REASONS.map(t=>[t.c,t]));
+const NAME=c=>(SH_[c]||AC[c]||RS[c]||{name:c}).name;
+const SHORT=c=>(SH_[c]||AC[c]||RS[c]||{short:c}).short;
 const PCOLORS=['#3a50e0','#e0573a','#14967f','#9b4fd6','#d68a00','#d23a7a','#2f86d6','#5f8f2c','#8a6250','#4b5468'];
 const MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 const MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -339,6 +407,7 @@ const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
 const fmt=dt=>ymd(dt.getFullYear(),dt.getMonth(),dt.getDate());
 const addDays=(s,k)=>{const d=parse(s);d.setDate(d.getDate()+k);return fmt(d)};
 const icon=c=>`<svg class="ico"><use href="#i-${c}"/></svg>`;
+const fx=r=>'×'+r.toFixed(1);
 const now=new Date();const todayStr=fmt(now);
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
@@ -346,54 +415,97 @@ function ini(n){const s=[...String(n||'').trim()];let i=0;while(i<s.length-1&&'�
 const av=(m,cls='')=>`<span class="av ${cls}" style="--pc:${esc(m.color)}">${esc(ini(m.name))}</span>`;
 const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
 
-const S={db:null,members:[],entries:new Map(),me:lsGet('roster.me')||'',view:lsGet('roster.view')||'cal',
+const S={members:[],entries:new Map(),me:lsGet('roster.me')||'',view:lsGet('roster.view')||'cal',
   y:now.getFullYear(),m:now.getMonth(),paint:null,paintOn:false,gridSel:null,loaded:false,sb:null,code:'',ch:null,dirty:0};
 if(!['cal','grid','sum'].includes(S.view)) S.view='cal';
 
 function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;t.classList.toggle('up',S.paintOn);clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2400)}
 function status(html){const s=$('status');if(!html){s.hidden=true;return}s.innerHTML=html;s.hidden=false}
 const memberById=id=>S.members.find(m=>m.id===id);
+
+/* ---------- entry model ----------
+   entry = {member, date, shifts:{N|M|A:{k:'R'|'C', away:''|GOV|VL|SL|PL|SW}}, items:[ACT codes], note} */
 const ent=(mid,date)=>S.entries.get(mid+'_'+date);
-const itemsOf=(mid,date)=>{const e=ent(mid,date);return e?e.items:[]};
-const noteOf=(mid,date)=>{const e=ent(mid,date);return e?e.note||'':''};
-const isBusy=(mid,date)=>itemsOf(mid,date).some(c=>T[c]&&T[c].busy);
+const blank=(mid,date)=>({member:mid,date,shifts:{},items:[],note:''});
+const clone=e=>({member:e.member,date:e.date,shifts:JSON.parse(JSON.stringify(e.shifts||{})),items:(e.items||[]).slice(),note:e.note||''});
+const getE=(mid,date)=>clone(ent(mid,date)||blank(mid,date));
+const isEmpty=e=>!Object.keys(e.shifts).length&&!e.items.length&&!e.note;
+
+// คำนวณเวรที่ขึ้นจริงและอัตราค่าตอบแทนของวันนั้น
+function calc(e){
+  const out={worked:[],missed:[],acts:[]};
+  if(!e) return out;
+  for(const s of SHIFTS){const v=e.shifts[s.c];if(!v) continue;
+    if(v.away&&v.k==='R') out.missed.push({c:s.c,away:v.away}); else out.worked.push({c:s.c,k:v.k})}
+  const n=out.worked.length;
+  out.worked.forEach((w,i)=>{
+    if(w.k!=='C'){w.rate=0;return}
+    w.rate=(n===3&&i===2)?RATE_TRIPLE:(n>=2?RATE_DOUBLE:RATE_SINGLE);
+  });
+  out.acts=(e.items||[]).filter(c=>AC[c]);
+  return out;
+}
+const dayOf=(mid,date)=>calc(ent(mid,date));
+function isBusy(mid,date){
+  const d=dayOf(mid,date);
+  return d.worked.length>0||d.missed.some(x=>RS[x.away]&&RS[x.away].busy)||d.acts.some(c=>AC[c].busy);
+}
 
 /* ---------- writes ---------- */
-function guard(){
-  if(!S.sb||!S.code){toast('ยังเชื่อมต่อฐานข้อมูลไม่ได้');return false}
-  return true;
-}
+function guard(){if(!S.sb||!S.code){toast('ยังเชื่อมต่อฐานข้อมูลไม่ได้');return false}return true}
 async function rpc(fn,args){
   const {data,error}=await S.sb.rpc(fn,{p_code:S.code,...args});
-  if(error){
-    if(String(error.message||'').includes('invalid_code')) logout('รหัสกลุ่มถูกเปลี่ยน กรุณาใส่รหัสใหม่');
-    throw error;
-  }
+  if(error){if(String(error.message||'').includes('invalid_code')) logout('รหัสกลุ่มถูกเปลี่ยน กรุณาใส่รหัสใหม่');throw error}
   return data;
 }
 function ping(){try{S.ch&&S.ch.send({type:'broadcast',event:'changed',payload:{}})}catch(e){}}
 const writeQ=new Map();
-async function saveDay(mid,date,items,note,quiet){
+async function saveE(e,quiet){
   if(!guard()) return false;
-  const key=mid+'_'+date,prev=S.entries.get(key);
-  const empty=!items.length&&!note;
-  if(empty) S.entries.delete(key); else S.entries.set(key,{member:mid,date,items,note:note||''});
-  S.dirty=Date.now();
-  renderMain();
-  const run=(writeQ.get(key)||Promise.resolve()).then(()=>rpc('roster_save_entry',{p_member:mid,p_day:date,p_items:items,p_note:note||''}));
+  const key=e.member+'_'+e.date,prev=S.entries.get(key);
+  if(isEmpty(e)) S.entries.delete(key); else S.entries.set(key,e);
+  S.dirty=Date.now();renderMain();
+  const run=(writeQ.get(key)||Promise.resolve()).then(()=>rpc('roster_save_entry',{p_member:e.member,p_day:e.date,p_shifts:e.shifts,p_items:e.items,p_note:e.note||''}));
   writeQ.set(key,run.catch(()=>{}));
   try{await run;S.dirty=Date.now();ping();return true}
-  catch(e){
+  catch(err){
     if(prev) S.entries.set(key,prev); else S.entries.delete(key);
-    if(!quiet) toast('บันทึกไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
+    if(!quiet) toast(String(err&&err.message||'').includes('invalid_')?'ฐานข้อมูลยังเป็นรุ่นเก่า กรุณารัน supabase-update-v3.sql':'บันทึกไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
     renderMain();return false;
   }
 }
-function toggleType(items,c){
-  if(items.includes(c)) return items.filter(x=>x!==c);
-  if(T[c].whole) return [c];
-  const out=items.filter(x=>!T[x].whole).concat(c);
-  return TYPES.map(t=>t.c).filter(x=>out.includes(x));
+// ตั้งเวร: kind = '' (ไม่มี) | 'R' | 'C'
+function setShift(e,c,kind){
+  if(!kind) delete e.shifts[c];
+  else{const old=e.shifts[c];e.shifts[c]={k:kind,away:kind==='R'&&old&&old.k==='R'?old.away||'':''}}
+  if(kind==='R') e.items=e.items.filter(x=>x!=='OFF');
+  return e;
+}
+function toggleAct(e,c){
+  if(e.items.includes(c)) e.items=e.items.filter(x=>x!==c);
+  else{
+    e.items.push(c);
+    if(c==='OFF') for(const k of Object.keys(e.shifts)) if(e.shifts[k].k==='R') delete e.shifts[k];
+    e.items=ACTS.map(a=>a.c).filter(x=>e.items.includes(x));
+  }
+  return e;
+}
+
+/* ---------- display helpers ---------- */
+function tagsHtml(d){
+  let h='';
+  for(const w of d.worked) h+=`<span class="tag t-${w.c}${w.k==='C'?' cv':''}" title="${NAME(w.c)}${w.k==='C'?' (แทน '+fx(w.rate)+')':''}">${icon(w.c)}<span class="tx">${SHORT(w.c)}</span>${w.k==='C'?`<span class="rt">${fx(w.rate)}</span>`:''}</span>`;
+  const reasons=[];
+  for(const x of d.missed){h+=`<span class="tag t-${x.c} void" title="${NAME(x.c)} (ไม่ได้ขึ้น: ${NAME(x.away)})">${icon(x.c)}<span class="tx">${SHORT(x.c)}</span></span>`;if(!reasons.includes(x.away)) reasons.push(x.away)}
+  for(const r of reasons) if(!d.acts.includes(r)) h+=`<span class="tag t-${r}" title="${NAME(r)}">${icon(r)}<span class="tx">${SHORT(r)}</span></span>`;
+  for(const a of d.acts) h+=`<span class="tag t-${a}" title="${NAME(a)}">${icon(a)}<span class="tx">${SHORT(a)}</span></span>`;
+  return h;
+}
+function dayText(d,html){
+  const parts=d.worked.map(w=>NAME(w.c)+(w.k==='C'?` แทน ${fx(w.rate)}`:''))
+    .concat(d.missed.map(x=>(html?`<s>${NAME(x.c)}</s>`:NAME(x.c))+` → ${NAME(x.away)}`))
+    .concat(d.acts.map(NAME));
+  return parts.join(' + ');
 }
 
 /* ---------- render ---------- */
@@ -410,11 +522,11 @@ function renderMain(){
   if(S.view==='grid') renderGrid();
   if(S.view==='sum') renderSum();
   if(S.paintOn) drawPaint();
-  if(SH&&SH.kind==='day') drawSheet(true);
+  if(SH&&SH.kind==='day') drawDayBody();
 }
 function renderMeSel(){
   const sel=$('meSel');
-  if(S.loaded&&S.me&&!memberById(S.me)){S.me=''}
+  if(S.loaded&&S.me&&!memberById(S.me)) S.me='';
   const html=['<option value="">เลือกชื่อ</option>'].concat(S.members.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`)).join('');
   if(sel._h!==html){sel.innerHTML=html;sel._h=html}
   sel.value=S.me;
@@ -422,32 +534,32 @@ function renderMeSel(){
 function renderToday(){
   const el=$('todayCard');
   if(!S.members.length){el.hidden=true;return}
-  const d=new Date();
-  el.hidden=false;
+  const d=new Date();el.hidden=false;
   el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]}</h2></div>
-   <div class="tlist">${S.members.map(m=>{const its=itemsOf(m.id,todayStr);
-     return `<div class="tperson">${av(m)}<div><div class="nm">${esc(m.name)}</div><div class="st">${its.length?its.map(c=>T[c].name).join(' + '):'ยังไม่ได้ลง'}</div></div></div>`}).join('')}</div>`;
-}
-function tagsFor(mid,date,compact){
-  return itemsOf(mid,date).map(c=>`<span class="tag t-${c}" title="${T[c].name}">${icon(c)}<span class="tx">${T[c].short}</span></span>`).join('');
+   <div class="tlist">${S.members.map(m=>{const t=dayText(dayOf(m.id,todayStr),true);
+     return `<div class="tperson">${av(m)}<div><div class="nm">${esc(m.name)}</div><div class="st">${t||'ยังไม่ได้ลง'}</div></div></div>`}).join('')}</div>`;
 }
 function renderCal(){
   const first=new Date(S.y,S.m,1).getDay(),n=daysIn(S.y,S.m);
   let h=DOW.map((d,i)=>`<div class="dow${i===0||i===6?' we':''}">${d}</div>`).join('');
   for(let i=0;i<first;i++) h+='<div class="day blank"></div>';
   for(let d=1;d<=n;d++){
-    const date=ymd(S.y,S.m,d),wd=(first+d-1)%7;
-    let rows='';
+    const date=ymd(S.y,S.m,d),wd=(first+d-1)%7;let rows='';
     for(const m of S.members){
-      const its=itemsOf(m.id,date),nt=noteOf(m.id,date);
-      if(!its.length&&!nt) continue;
-      rows+=`<div class="ent">${av(m,'sm')}${tagsFor(m.id,date)}${!its.length&&nt?'<span class="tag t-X">✎</span>':''}</div>`;
+      const e=ent(m.id,date);if(!e) continue;
+      const t=tagsHtml(calc(e));
+      rows+=`<div class="ent">${av(m,'sm')}${t||(e.note?'<span class="tag t-X">✎</span>':'')}</div>`;
     }
     h+=`<button type="button" class="day${wd===0||wd===6?' we':''}${date===todayStr?' today':''}" data-date="${date}" aria-label="${d} ${MONTHS[S.m]}"><span class="dn">${d}</span><div class="ents">${rows}</div></button>`;
   }
   $('calGrid').innerHTML=h;
   $('calGrid').classList.toggle('painting',S.paintOn);
-  $('legend').innerHTML=TYPES.map(t=>`<span class="tag t-${t.c}">${icon(t.c)}${t.name}</span>`).join('');
+  $('legend').innerHTML=SHIFTS.map(s=>`<span class="tag t-${s.c}">${icon(s.c)}${s.name}</span>`).join('')
+    +`<span class="tag t-M cv">${icon('M')}<span class="tx">เช้า</span><span class="rt">×1.5</span></span><span class="lg-t">= แทนเวร</span>`
+    +`<span class="tag t-M void">${icon('M')}<span class="tx">เช้า</span></span><span class="lg-t">= มีในตารางแต่ไม่ได้ขึ้น</span>`
+    +'<span class="lg-br"></span>'
+    +ACTS.filter(a=>!a.hidden).map(a=>`<span class="tag t-${a.c}">${icon(a.c)}${a.name}</span>`).join('')
+    +`<span class="tag t-SW">${icon('SW')}แลกเวร</span>`;
   if(S.loaded&&!S.members.length) status('<b>เริ่มต้นใช้งาน</b> — กดไอคอน <b>สมาชิก</b> มุมขวาบน เพื่อเพิ่มชื่อคุณ แฟน และเพื่อน แล้วเลือกชื่อตัวเองที่ "ฉันคือ"');
   else if(S.loaded) status('');
 }
@@ -462,11 +574,15 @@ function renderGrid(){
   for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),wd=new Date(S.y,S.m,d).getDay();head+=`<th class="${wd===0||wd===6?'we':''}${date===todayStr?' td':''}">${DOW[wd]}<span class="d">${d}</span></th>`}
   head+='</tr></thead>';
   let body='<tbody>';const free=[];
-  for(const m of S.members){
-    if(!S.gridSel.has(m.id)) continue;
+  for(const m of sel){
     body+=`<tr><td class="nm"><span>${av(m,'sm')}${esc(m.name)}</span></td>`;
-    for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),its=itemsOf(m.id,date);
-      body+=`<td class="c" data-date="${date}" data-mid="${esc(m.id)}" title="${its.map(c=>T[c].name).join(', ')}">${its.length===1?`<span class="cell t-${its[0]}">${icon(its[0])}</span>`:its.length>1?`<span class="cell multi t-${its[0]}">${its.length}</span>`:''}</td>`}
+    for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),dd=dayOf(m.id,date);
+      let inner='';
+      if(dd.worked.length===1){const w=dd.worked[0];inner=`<span class="cell t-${w.c}${w.k==='C'?' cv':''}">${icon(w.c)}</span>`}
+      else if(dd.worked.length>1){inner=`<span class="cell multi t-${dd.worked[0].c}">${dd.worked.map(w=>SHORT(w.c)[0]).join('')}</span>`}
+      else if(dd.missed.length){inner=`<span class="cell t-${dd.missed[0].away}">${icon(dd.missed[0].away)}</span>`}
+      else if(dd.acts.length){inner=`<span class="cell t-${dd.acts[0]}">${icon(dd.acts[0])}</span>`}
+      body+=`<td class="c" data-date="${date}" data-mid="${esc(m.id)}" title="${esc(dayText(dd))}">${inner}</td>`}
     body+='</tr>';
   }
   if(sel.length){
@@ -481,21 +597,46 @@ function renderGrid(){
   ranges.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0])||a[0]-b[0]);
   $('ranges').innerHTML=!sel.length?'<span class="muted">เลือกอย่างน้อย 1 คน</span>':ranges.length?ranges.slice(0,8).map(([a,b])=>`<span class="range"><b>${a===b?a:a+'–'+b} ${MS[S.m]}</b><span class="muted">${b-a+1} วัน</span></span>`).join(''):'<span class="muted">เดือนนี้ไม่มีวันที่ว่างตรงกันทุกคน</span>';
 }
-function renderSum(){
+function monthStats(mid){
   const pre=`${S.y}-${pad(S.m+1)}-`;
+  const st={worked:{N:0,M:0,A:0},regular:0,cover:0,coverDays:0,rates:{},missed:{N:0,M:0,A:0},days:{},equiv:0};
+  [RATE_SINGLE,RATE_DOUBLE,RATE_TRIPLE].forEach(r=>st.rates[r]=0);
+  for(const e of S.entries.values()){
+    if(e.member!==mid||!e.date.startsWith(pre)) continue;
+    const d=calc(e);
+    let anyCover=false;
+    for(const w of d.worked){st.worked[w.c]++;if(w.k==='C'){st.cover++;anyCover=true;st.rates[w.rate]=(st.rates[w.rate]||0)+1;st.equiv+=w.rate}else st.regular++}
+    if(anyCover) st.coverDays++;
+    const codes=new Set(d.acts.concat(d.missed.map(x=>x.away)));
+    for(const x of d.missed) st.missed[x.c]++;
+    codes.forEach(c=>st.days[c]=(st.days[c]||0)+1);          // นับเป็น "วัน"
+  }
+  st.total=st.regular+st.cover;
+  st.leave=['VL','SL','PL'].reduce((s,c)=>s+(st.days[c]||0),0);
+  return st;
+}
+function renderSum(){
   if(!S.members.length){$('sums').innerHTML='<div class="notice">ยังไม่มีสมาชิก</div>';return}
   $('sums').innerHTML=S.members.map(m=>{
-    const c=Object.fromEntries(TYPES.map(t=>[t.c,0]));
-    for(const e of S.entries.values()) if(e.member===m.id&&e.date.startsWith(pre)) e.items.forEach(x=>{if(x in c)c[x]++});
-    const shifts=TYPES.filter(t=>t.shift).reduce((s,t)=>s+c[t.c],0);
-    const leave=TYPES.filter(t=>t.leave).reduce((s,t)=>s+c[t.c],0);
-    const total=Object.values(c).reduce((a,b)=>a+b,0);
-    const nz=TYPES.filter(t=>c[t.c]);
+    const st=monthStats(m.id);
+    const shiftChips=SHIFTS.filter(s=>st.worked[s.c]).map(s=>`<span class="tag t-${s.c}">${icon(s.c)}${s.short} <b>${st.worked[s.c]}</b></span>`).join('');
+    const dayChips=['OFF','GOV','MT','VL','SL','PL','SW','X','OT'].filter(c=>st.days[c]).map(c=>`<span class="tag t-${c}">${icon(c)}${SHORT(c)} <b>${st.days[c]}</b></span>`).join('');
+    const miss=SHIFTS.filter(s=>st.missed[s.c]);
+    const rates=Object.keys(st.rates).map(Number).sort((a,b)=>a-b).filter(r=>st.rates[r]||r!==RATE_SINGLE);
     return `<article class="sum"><div class="top">${av(m,'lg')}<div style="min-width:0"><div class="nm">${esc(m.name)}</div><div class="muted">${MONTHS[S.m]} ${S.y+543}</div></div></div>
-      <div class="kpis"><div class="kpi"><div class="v">${shifts}</div><div class="k">เวรทั้งหมด</div></div><div class="kpi"><div class="v">${c.OFF}</div><div class="k">วันหยุด</div></div><div class="kpi"><div class="v">${leave}</div><div class="k">วันลา</div></div></div>
-      ${total?`<div class="stack">${nz.map(t=>`<i class="t-${t.c}" style="width:${c[t.c]/total*100}%" title="${t.name} ${c[t.c]}"></i>`).join('')}</div>
-      <div class="breakdown">${nz.map(t=>`<span class="tag t-${t.c}">${icon(t.c)}${t.short} <b>${c[t.c]}</b></span>`).join('')}</div>`:'<div class="muted">เดือนนี้ยังไม่ได้ลงอะไร</div>'}
-    </article>`}).join('');
+      <div class="kpis">
+        <div class="kpi"><div class="v">${st.total}</div><div class="k">ขึ้นเวรจริง</div></div>
+        <div class="kpi"><div class="v">${st.cover}</div><div class="k">แทนเวร · ${st.coverDays} วัน</div></div>
+        <div class="kpi"><div class="v">${st.leave}</div><div class="k">วันลา</div></div>
+      </div>
+      <div class="pay">
+        <div class="pay-h"><span>ค่าตอบแทนแทนเวร</span><span class="muted">เทียบเท่า <b>${st.equiv.toFixed(1)}</b> เวร</span></div>
+        <div class="pay-r">${rates.map(r=>`<div class="pr${st.rates[r]?'':' zero'}"><span class="x">${fx(r)}</span><span class="n">${st.rates[r]||0}</span><span class="u">เวร</span></div>`).join('')}</div>
+      </div>
+      ${shiftChips||dayChips?`<div class="breakdown">${shiftChips}${dayChips}</div>`:'<div class="muted">เดือนนี้ยังไม่ได้ลงอะไร</div>'}
+      <div class="missed">เวรประจำ ${st.regular} · แทน ${st.cover}${miss.length?` · ไม่ได้ขึ้นตามตาราง: ${miss.map(s=>`${s.short} ${st.missed[s.c]}`).join(', ')} (ไม่นับ)`:''}</div>
+    </article>`}).join('')
+    +`<div class="rule muted">วิธีคิด: นับในวันเดียวกัน ดึก → เช้า → บ่าย · ขึ้น 2 เวร เวรแทนได้ ${fx(RATE_DOUBLE)} · ขึ้นครบ 3 เวร เวรสุดท้ายได้ ${fx(RATE_TRIPLE)} · แทนเวรเดี่ยว ${fx(RATE_SINGLE)}</div>`;
 }
 
 /* ---------- sheets ---------- */
@@ -505,36 +646,57 @@ function openDay(date,mid){
   mid=mid||S.me||(S.members[0]&&S.members[0].id)||'';
   SH={kind:'day',date,mid};drawSheet();
 }
-function drawSheet(soft){
+function drawSheet(){
   if(!SH){$('sheetHost').innerHTML='';return}
   let inner='';
   if(SH.kind==='day'){
     const dt=parse(SH.date);
-    const items=itemsOf(SH.mid,SH.date);
-    if(soft){ // live refresh: update tiles + others without losing note focus
-      document.querySelectorAll('[data-tile]').forEach(b=>b.setAttribute('aria-pressed',items.includes(b.dataset.tile)));
-      const o=$('othersBox');if(o) o.innerHTML=othersHtml();
-      return;
-    }
     inner=`<div class="shead"><button class="iconbtn" type="button" data-dstep="-1" aria-label="วันก่อน"><svg class="ico" style="font-size:1.3rem"><use href="#i-left"/></svg></button>
       <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]}</h3>
       <button class="iconbtn" type="button" data-dstep="1" aria-label="วันถัดไป"><svg class="ico" style="font-size:1.3rem"><use href="#i-right"/></svg></button></div>
       ${S.members.length?`<div class="who-row">${S.members.map(m=>`<button type="button" class="whob" data-who="${esc(m.id)}" aria-pressed="${m.id===SH.mid}">${av(m)}<span>${esc(m.name)}</span></button>`).join('')}</div>
-      <div class="tiles">${TYPES.map(t=>`<button type="button" class="tile t-${t.c}" data-tile="${t.c}" aria-pressed="${items.includes(t.c)}"><span class="ib">${icon(t.c)}</span><span><span class="nm">${t.name}</span><br><span class="hint">${t.hint}</span></span></button>`).join('')}</div>
-      <input class="field" id="noteIn" type="text" maxlength="200" placeholder="หมายเหตุ (ไม่บังคับ) เช่น ประชุม 13:00, แลกเวรกับเอ" value="${esc(noteOf(SH.mid,SH.date))}">
+      <div id="dayBody" style="display:flex;flex-direction:column;gap:14px"></div>
+      <input class="field" id="noteIn" type="text" maxlength="200" placeholder="หมายเหตุ (ไม่บังคับ) เช่น แทนพี่เอ, ประชุม 13:00" value="${esc((ent(SH.mid,SH.date)||{}).note||'')}">
       <div class="btnrow" style="justify-content:space-between;align-items:center"><span class="saved" id="savedMsg">แตะเพื่อเลือก บันทึกให้อัตโนมัติ</span><button class="btn primary" type="button" data-close>เสร็จ</button></div>`
       :`<div class="notice">ยังไม่มีสมาชิก กดไอคอนสมาชิกมุมขวาบนเพื่อเพิ่มชื่อก่อน</div>`}
-      <div class="others"><div class="muted">คนอื่นในวันนี้</div><div id="othersBox" style="display:flex;flex-direction:column;gap:8px">${othersHtml()}</div></div>`;
+      <div class="others"><div class="muted">คนอื่นในวันนี้</div><div id="othersBox" style="display:flex;flex-direction:column;gap:8px"></div></div>`;
   }
   if(SH.kind==='pattern') inner=patternHtml();
   if(SH.kind==='members') inner=membersHtml();
   $('sheetHost').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`;
+  if(SH.kind==='day') drawDayBody();
 }
-function othersHtml(){
-  const o=S.members.filter(m=>m.id!==SH.mid&&(itemsOf(m.id,SH.date).length||noteOf(m.id,SH.date)));
-  return o.length?o.map(m=>`<div class="orow">${av(m,'sm')}<b>${esc(m.name)}</b>${itemsOf(m.id,SH.date).map(c=>`<span class="tag t-${c}">${icon(c)}${T[c].name}</span>`).join('')}${noteOf(m.id,SH.date)?`<span class="muted">${esc(noteOf(m.id,SH.date))}</span>`:''}</div>`).join(''):'<div class="muted">ยังไม่มีใครลงไว้</div>';
+function drawDayBody(){
+  const box=$('dayBody'),ob=$('othersBox');
+  if(ob){
+    const o=S.members.filter(m=>m.id!==SH.mid&&ent(m.id,SH.date));
+    ob.innerHTML=o.length?o.map(m=>{const e=ent(m.id,SH.date);return `<div class="orow">${av(m,'sm')}<b>${esc(m.name)}</b>${tagsHtml(calc(e))}${e.note?`<span class="muted">${esc(e.note)}</span>`:''}</div>`}).join(''):'<div class="muted">ยังไม่มีใครลงไว้</div>';
+  }
+  if(!box) return;
+  const e=getE(SH.mid,SH.date),d=calc(e);
+  const rateOf=c=>{const w=d.worked.find(x=>x.c===c);return w&&w.k==='C'?w.rate:null};
+  box.innerHTML=`<div class="secl">เวรวันนี้ <span>เรียงตามเวลา ดึก → เช้า → บ่าย</span></div>
+    <div class="srows">${SHIFTS.map(s=>{const v=e.shifts[s.c],k=v?v.k:'',r=rateOf(s.c);
+      return `<div class="srow t-${s.c}${k?' on':''}">
+        <span class="ib">${icon(s.c)}</span>
+        <div class="si"><b>${s.name}</b><span class="hint">${s.hint}${r?` · <span class="rate">แทน ${fx(r)}</span>`:''}</span></div>
+        <div class="segm" role="group" aria-label="${s.name}">
+          <button type="button" data-sk="${s.c}:" aria-pressed="${!k}">ไม่มี</button>
+          <button type="button" data-sk="${s.c}:R" aria-pressed="${k==='R'}">ประจำ</button>
+          <button type="button" data-sk="${s.c}:C" aria-pressed="${k==='C'}">แทน</button>
+        </div>
+        ${k==='R'?`<label class="sa"><span>สถานะ</span><select id="sa-${s.c}" data-sa="${s.c}"><option value="">ขึ้นเวรจริง</option>${REASONS.map(x=>`<option value="${x.c}" ${v.away===x.c?'selected':''}>ไม่ได้ขึ้น · ${x.name}</option>`).join('')}</select></label>`:''}
+      </div>`}).join('')}</div>
+    <div class="secl">กิจกรรม / สถานะอื่น <span>ลงเพิ่มได้ ไม่กระทบเวรที่ขึ้นจริง</span></div>
+    <div class="tiles">${ACTS.filter(a=>!a.hidden||e.items.includes(a.c)).map(a=>`<button type="button" class="tile t-${a.c}" data-act="${a.c}" aria-pressed="${e.items.includes(a.c)}"><span class="ib">${icon(a.c)}</span><span class="nm">${a.name}</span></button>`).join('')}</div>
+    <div class="daysum">${dayText(d,true)||'ยังไม่ได้ลงอะไรในวันนี้'}</div>`;
 }
 function flashSaved(){const s=$('savedMsg');if(s){s.textContent='บันทึกแล้ว ✓';clearTimeout(flashSaved._t);flashSaved._t=setTimeout(()=>{if($('savedMsg'))$('savedMsg').textContent='แตะเพื่อเลือก บันทึกให้อัตโนมัติ'},1500)}}
+function curNote(){const n=$('noteIn');return n?n.value.trim():null}
+function editDay(fn){
+  const e=getE(SH.mid,SH.date);const n=curNote();if(n!==null) e.note=n;
+  fn(e);saveE(e).then(r=>r&&flashSaved());
+}
 
 /* pattern */
 function openPattern(){
@@ -546,14 +708,16 @@ function openPattern(){
 function patternHtml(){
   const me=memberById(S.me);
   const days=SH.start&&SH.end&&SH.end>=SH.start?Math.round((parse(SH.end)-parse(SH.start))/864e5)+1:0;
-  return `<div class="shead"><span style="width:34px"></span><h3>ลงเวรเป็นรอบ</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
+  const opts=['M','A','N','OFF'];
+  return `<div class="shead"><span style="width:34px"></span><h3>ลงเวรประจำเป็นรอบ</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
     <div class="muted" style="display:flex;align-items:center;gap:6px">ลงให้ ${av(me,'sm')}<b style="color:var(--fg)">${esc(me.name)}</b></div>
     <div><div class="muted" style="margin-bottom:6px">รูปแบบสำเร็จรูป</div><div class="presets">${PRESETS.map((p,i)=>`<button class="pill" type="button" data-preset="${i}">${p.name}</button>`).join('')}</div></div>
     <div><div class="muted" style="margin-bottom:6px">หรือแตะสร้างรอบเอง (แตะไอคอนในรอบเพื่อลบ)</div>
-      <div class="seq">${SH.seq.length?SH.seq.map((c,i)=>`<button type="button" class="cell t-${c}" data-rm="${i}" title="${T[c].name} — แตะเพื่อลบ">${icon(c)}</button>`).join(''):'<span class="muted" style="padding:0 6px">ยังว่าง</span>'}</div>
-      <div class="pbtiles" style="margin-top:8px;flex-wrap:wrap">${TYPES.filter(t=>t.c!=='X').map(t=>`<button type="button" class="pbt t-${t.c}" data-add="${t.c}">${icon(t.c)}${t.short}</button>`).join('')}</div></div>
+      <div class="seq">${SH.seq.length?SH.seq.map((c,i)=>`<button type="button" class="cell t-${c}" data-rm="${i}" title="${NAME(c)} — แตะเพื่อลบ">${icon(c)}</button>`).join(''):'<span class="muted" style="padding:0 6px">ยังว่าง</span>'}</div>
+      <div class="pbtiles" style="margin-top:8px;flex-wrap:wrap">${opts.map(c=>`<button type="button" class="pbt t-${c}" data-add="${c}">${icon(c)}${SHORT(c)}</button>`).join('')}</div></div>
     <div class="two"><label>เริ่มวันที่<input class="field" type="date" id="pStart" value="${SH.start}"></label><label>ถึงวันที่<input class="field" type="date" id="pEnd" value="${SH.end}"></label></div>
-    ${SH.confirm?`<div class="notice">จะลงเวร <b>${days} วัน</b> ทับของเดิมในช่วงนี้ ยืนยันไหม?</div>
+    <div class="muted" style="font-size:.78rem">ลงทับเฉพาะเวรประจำ · เวรแทน กิจกรรม และหมายเหตุที่ลงไว้แล้วจะยังอยู่</div>
+    ${SH.confirm?`<div class="notice">จะลงเวรประจำ <b>${days} วัน</b> ยืนยันไหม?</div>
       <div class="btnrow"><button class="btn" type="button" data-pcancel>ยกเลิก</button><button class="btn primary" type="button" data-papply ${SH.busy?'disabled':''}>${SH.busy?'กำลังบันทึก…':'ยืนยัน ลงเลย'}</button></div>`
      :`<div class="btnrow"><button class="btn primary" type="button" data-pask ${SH.seq.length&&days?'':'disabled'}>ลง ${days||0} วัน</button></div>`}`;
 }
@@ -561,12 +725,19 @@ async function applyPattern(){
   if(!guard()) return;
   SH.busy=true;drawSheet();
   const seq=SH.seq.slice(),rows=[];let d=SH.start,i=0;
-  while(d<=SH.end&&rows.length<400){rows.push({date:d,items:[seq[i%seq.length]],note:noteOf(S.me,d)});d=addDays(d,1);i++}
+  while(d<=SH.end&&rows.length<400){
+    const code=seq[i%seq.length],e=getE(S.me,d);
+    const keep={};for(const k of Object.keys(e.shifts)) if(e.shifts[k].k==='C') keep[k]=e.shifts[k];
+    e.shifts=keep;e.items=e.items.filter(x=>x!=='OFF');
+    if(code==='OFF') e.items=ACTS.map(a=>a.c).filter(x=>x==='OFF'||e.items.includes(x));
+    else{const old=(ent(S.me,d)||{shifts:{}}).shifts[code];e.shifts[code]={k:'R',away:old&&old.k==='R'?old.away||'':''}}
+    rows.push(e);d=addDays(d,1);i++;
+  }
   try{
-    const n=await rpc('roster_save_many',{p_member:S.me,p_rows:rows});
-    rows.forEach(r=>S.entries.set(S.me+'_'+r.date,{member:S.me,date:r.date,items:r.items,note:r.note}));
+    const n=await rpc('roster_save_many',{p_member:S.me,p_rows:rows.map(e=>({date:e.date,shifts:e.shifts,items:e.items,note:e.note}))});
+    rows.forEach(e=>S.entries.set(e.member+'_'+e.date,e));
     S.dirty=Date.now();ping();closeSheet();renderMain();toast(`ลงเวรแล้ว ${n} วัน`);
-  }catch(e){SH.busy=false;drawSheet();toast('ลงเวรไม่สำเร็จ ลองอีกครั้ง')}
+  }catch(err){SH.busy=false;drawSheet();toast('ลงเวรไม่สำเร็จ ลองอีกครั้ง')}
 }
 
 /* members */
@@ -589,27 +760,38 @@ async function addMember(){
     if(!S.me){S.me=id;lsSet('roster.me',S.me)}
     if(S.gridSel) S.gridSel.add(id);
     ping();await loadData(true);
-    SH.name='';SH.color=PCOLORS[(S.members.length+1)%PCOLORS.length];toast(`เพิ่ม ${name} แล้ว`);drawSheet();
+    SH.name='';SH.color=PCOLORS[S.members.length%PCOLORS.length];toast(`เพิ่ม ${name} แล้ว`);drawSheet();
     setTimeout(()=>$('mName')&&$('mName').focus(),0);
   }catch(e){toast('เพิ่มไม่สำเร็จ ลองอีกครั้ง')}
 }
 
-/* paint */
+/* paint (ลงหลายวัน) */
+const PAINT=[
+  ...SHIFTS.map(s=>({id:'R:'+s.c,c:s.c,label:s.short+' (ประจำ)'})),
+  ...SHIFTS.map(s=>({id:'C:'+s.c,c:s.c,label:s.short+' (แทน)',cv:1})),
+  ...ACTS.filter(a=>!a.hidden).map(a=>({id:'A:'+a.c,c:a.c,label:a.name}))
+];
 function drawPaint(){
   if(!S.paintOn){$('paintHost').innerHTML='';return}
   const me=memberById(S.me);
-  $('paintHost').innerHTML=`<div class="paintbar"><div class="pbtop"><span class="muted" style="display:flex;align-items:center;gap:6px">${me?av(me,'sm')+'<b style="color:var(--fg)">'+esc(me.name)+'</b> · ':''}${S.paint?'แตะวันที่ในปฏิทินเพื่อลง/ลบ':'เลือกประเภทก่อน'}</span><button class="btn primary" type="button" id="paintDone">เสร็จ</button></div>
-   <div class="pbtiles">${TYPES.map(t=>`<button type="button" class="pbt t-${t.c}" data-pt="${t.c}" aria-pressed="${S.paint===t.c}">${icon(t.c)}${t.name}</button>`).join('')}</div></div>`;
+  $('paintHost').innerHTML=`<div class="paintbar"><div class="pbtop"><span class="muted" style="display:flex;align-items:center;gap:6px">${me?av(me,'sm')+'<b style="color:var(--fg)">'+esc(me.name)+'</b> · ':''}${S.paint?'แตะวันที่เพื่อลง/ลบ':'เลือกประเภทก่อน'}</span><button class="btn primary" type="button" id="paintDone">เสร็จ</button></div>
+   <div class="pbtiles">${PAINT.map(p=>`<button type="button" class="pbt t-${p.c}${p.cv?' cvb':''}" data-pt="${p.id}" aria-pressed="${S.paint===p.id}">${icon(p.c)}${p.label}</button>`).join('')}</div></div>`;
+}
+function paintDay(date){
+  const [t,c]=S.paint.split(':');const e=getE(S.me,date);
+  if(t==='A') toggleAct(e,c);
+  else{const kind=t==='R'?'R':'C';setShift(e,c,e.shifts[c]&&e.shifts[c].k===kind?'':kind)}
+  saveE(e);
 }
 
 /* ---------- events ---------- */
 document.addEventListener('click',e=>{
-  const t=e.target;const q=s=>t.closest(s);
-  if(t.id==='scrim'||q('[data-close]')){closeSheet();return}
-  let b;
-  if(b=q('[data-tile]')){if(!SH) return;const next=toggleType(itemsOf(SH.mid,SH.date),b.dataset.tile);const nt=$('noteIn')?$('noteIn').value.trim():'';saveDay(SH.mid,SH.date,next,nt).then(r=>r&&flashSaved());return}
+  const t=e.target;const q=s=>t.closest(s);let b;
+  if(t.id==='scrim'||q('[data-close]')){commitNote();closeSheet();return}
+  if(b=q('[data-sk]')){if(!SH) return;const [c,k]=b.dataset.sk.split(':');editDay(x=>setShift(x,c,k));return}
+  if(b=q('[data-act]')){if(!SH) return;editDay(x=>toggleAct(x,b.dataset.act));return}
   if(b=q('[data-who]')){commitNote();SH.mid=b.dataset.who;drawSheet();return}
-  if(b=q('[data-dstep]')){commitNote();SH.date=addDays(SH.date,+b.dataset.dstep);const d=parse(SH.date);if(d.getMonth()!==S.m||d.getFullYear()!==S.y){S.y=d.getFullYear();S.m=d.getMonth();subscribeEntries();render()}drawSheet();return}
+  if(b=q('[data-dstep]')){commitNote();SH.date=addDays(SH.date,+b.dataset.dstep);const d=parse(SH.date);if(d.getMonth()!==S.m||d.getFullYear()!==S.y){S.y=d.getFullYear();S.m=d.getMonth();loadData(true);render()}drawSheet();return}
   if(b=q('[data-preset]')){const p=PRESETS[+b.dataset.preset];SH.seq=p.seq.slice();
     if(p.weekAlign){const d=parse(SH.start);const back=(d.getDay()+6)%7;SH.seq=p.seq.slice(back).concat(p.seq.slice(0,back))}
     SH.confirm=false;drawSheet();return}
@@ -629,19 +811,19 @@ document.addEventListener('click',e=>{
   if(b=q('[data-gp]')){const id=b.dataset.gp;S.gridSel.has(id)?S.gridSel.delete(id):S.gridSel.add(id);renderGrid();return}
   if(b=q('#calGrid .day[data-date]')){
     const date=b.dataset.date;
-    if(S.paintOn){if(!S.paint){toast('เลือกประเภทเวรด้านล่างก่อน');return}if(!memberById(S.me)){toast('เลือกชื่อตัวเองก่อน');return}
-      saveDay(S.me,date,toggleType(itemsOf(S.me,date),S.paint),noteOf(S.me,date));return}
+    if(S.paintOn){if(!S.paint){toast('เลือกประเภทด้านล่างก่อน');return}if(!memberById(S.me)){toast('เลือกชื่อตัวเองก่อน');return}paintDay(date);return}
     openDay(date);return}
   if(b=q('#rosterGrid td.c[data-mid]')){openDay(b.dataset.date,b.dataset.mid);return}
 });
 function commitNote(){
-  const n=$('noteIn');if(!n||!SH||SH.kind!=='day') return;
-  const v=n.value.trim();if(v===noteOf(SH.mid,SH.date)) return;
-  saveDay(SH.mid,SH.date,itemsOf(SH.mid,SH.date),v).then(r=>r&&flashSaved());
+  if(!SH||SH.kind!=='day') return;const n=curNote();if(n===null) return;
+  const e=getE(SH.mid,SH.date);if(n===(e.note||'')) return;
+  e.note=n;saveE(e).then(r=>r&&flashSaved());
 }
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='noteIn') commitNote();
+  if(t.dataset&&t.dataset.sa&&SH){const c=t.dataset.sa;editDay(x=>{if(x.shifts[c]) x.shifts[c].away=t.value})}
   if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render()}
   if(t.id==='pStart'){SH.start=t.value;SH.confirm=false;drawSheet()}
   if(t.id==='pEnd'){SH.end=t.value;SH.confirm=false;drawSheet()}
@@ -651,19 +833,29 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.id==='mName') addMember();
   if(e.key==='Enter'&&e.target.id==='noteIn') e.target.blur();
 });
-
 document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{S.view=b.dataset.view;lsSet('roster.view',S.view);if(S.view!=='cal'){S.paintOn=false;drawPaint()}render()}));
-function shiftMonth(k){let m=S.m+k,y=S.y;if(m<0){m=11;y--}if(m>11){m=0;y++}S.y=y;S.m=m;subscribeEntries();render()}
+function shiftMonth(k){let m=S.m+k,y=S.y;if(m<0){m=11;y--}if(m>11){m=0;y++}S.y=y;S.m=m;loadData(true);render()}
 $('prevBtn').onclick=()=>shiftMonth(-1);$('nextBtn').onclick=()=>shiftMonth(1);
-$('monthTitle').onclick=()=>{S.y=now.getFullYear();S.m=now.getMonth();subscribeEntries();render()};
+$('monthTitle').onclick=()=>{S.y=now.getFullYear();S.m=now.getMonth();loadData(true);render()};
 $('manageBtn').onclick=openMembers;
 $('patternBtn').onclick=openPattern;
-$('paintBtn').onclick=()=>{if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}S.paintOn=true;S.paint=S.paint||'M';drawPaint();renderCal()};
+$('paintBtn').onclick=()=>{if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}S.paintOn=true;S.paint=S.paint||'R:M';drawPaint();renderCal()};
 
 /* ---------- data ---------- */
 function range(){
   const a=addDays(ymd(S.y,S.m,1),-7),b=addDays(ymd(S.y,S.m,daysIn(S.y,S.m)),7);
   return [todayStr<a?todayStr:a, todayStr>b?todayStr:b];
+}
+// แปลงข้อมูลรุ่นเก่า (ถ้ายังไม่ได้รัน migration) ให้อยู่ในรูปแบบใหม่
+function normalize(e){
+  const shifts={};const src=e.shifts&&typeof e.shifts==='object'?e.shifts:{};
+  for(const s of SHIFTS){const v=src[s.c];if(v&&(v.k==='R'||v.k==='C')) shifts[s.c]={k:v.k,away:RS[v.away]?v.away:''}}
+  let items=[];
+  for(const x of (e.items||[])){
+    if(SH_[x]){if(!shifts[x]) shifts[x]={k:'R',away:RS[e.away]?e.away:''}}
+    else if(AC[x]&&!items.includes(x)) items.push(x);
+  }
+  return {member:e.member,date:e.date,shifts,items,note:e.note||''};
 }
 let loadSeq=0;
 async function loadData(force){
@@ -671,11 +863,11 @@ async function loadData(force){
   const my=++loadSeq,[a,b]=range(),started=Date.now();
   try{
     const res=await rpc('roster_load',{p_from:a,p_to:b});
-    if(my!==loadSeq) return true;                       // a newer load is running
-    if(!force&&S.dirty>started){softReload();return true} // a local write landed meanwhile; try again shortly
+    if(my!==loadSeq) return true;
+    if(!force&&S.dirty>started){softReload();return true}
     S.members=(res.members||[]).filter(m=>m.name);
     for(const [k,e] of [...S.entries]) if(e.date>=a&&e.date<=b) S.entries.delete(k);
-    (res.entries||[]).forEach(e=>S.entries.set(e.member+'_'+e.date,{member:e.member,date:e.date,items:(e.items||[]).filter(x=>T[x]),note:e.note||''}));
+    (res.entries||[]).forEach(e=>S.entries.set(e.member+'_'+e.date,normalize(e)));
     if(S.gridSel) for(const id of [...S.gridSel]) if(!memberById(id)) S.gridSel.delete(id);
     if(!S.ch) joinChannel(res.group_id);
     S.loaded=true;status('');
@@ -686,15 +878,11 @@ async function loadData(force){
     return false;
   }
 }
-function subscribeEntries(){loadData(true)}
 let reloadT=null;
 function softReload(){clearTimeout(reloadT);reloadT=setTimeout(()=>loadData(),800)}
 function joinChannel(gid){
-  try{
-    S.ch=S.sb.channel('roster-'+gid,{config:{broadcast:{self:false}}})
-      .on('broadcast',{event:'changed'},softReload)
-      .subscribe();
-  }catch(e){S.ch=null}
+  try{S.ch=S.sb.channel('roster-'+gid,{config:{broadcast:{self:false}}}).on('broadcast',{event:'changed'},softReload).subscribe()}
+  catch(e){S.ch=null}
 }
 function logout(msg){
   S.code='';lsSet('roster.code','');
@@ -727,7 +915,6 @@ async function start(){
   S.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false}});
   const saved=lsGet('roster.code');
   if(saved) await enter(saved); else {$('gate').hidden=false;$('codeIn').focus()}
-  // fallback refresh when realtime is off or the phone was asleep
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) softReload()});
   setInterval(()=>{if(!document.hidden) loadData()},60000);
 }
