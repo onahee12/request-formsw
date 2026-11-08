@@ -1,106 +1,737 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบรับคำขอ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3a50e0">
+<title>ตารางเวรของเรา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: phone-first shared roster app — "today" strip, month board with person avatars + shift icons, team grid for overlaps, person cards for the tally; all entry happens in one bottom sheet */
+:root{
+  --bg:#f2f4f9; --card:#ffffff; --soft:#e8ecf5; --fg:#1b2238; --muted:#69728a; --line:#dde2ee;
+  --accent:#3a50e0; --accent-soft:#e4e8fd; --accent-fg:#ffffff; --free:#1f9d62;
+  --t-M:#e9a400; --t-A:#ee6c2b; --t-N:#5a4fcf; --t-OT:#c43f8f; --t-MT:#0e8f9a;
+  --t-OFF:#7d8aa0; --t-VL:#1f9d62; --t-SL:#de4040; --t-PL:#8a59d1; --t-X:#6f7f23;
+  --font:"Anuphan",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
+  --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
+  --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
+  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10131c; --card:#191e2b; --soft:#232a3b; --fg:#e8ebf4; --muted:#98a1b8; --line:#2b3346;
+  --accent:#7d8dff; --accent-soft:#262e55; --accent-fg:#0d1020; --free:#47c98a;
+  --t-M:#f5c13a; --t-A:#f58a52; --t-N:#9a91ff; --t-OT:#ec7bbf; --t-MT:#3fc6cf;
+  --t-OFF:#8f9bb0; --t-VL:#47c98a; --t-SL:#f36d6d; --t-PL:#b994f5; --t-X:#b1c25a;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:18px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
+.muted{color:var(--muted);font-size:.86rem}
+.ico{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.t-M{--tc:var(--t-M)}.t-A{--tc:var(--t-A)}.t-N{--tc:var(--t-N)}.t-OT{--tc:var(--t-OT)}.t-MT{--tc:var(--t-MT)}
+.t-OFF{--tc:var(--t-OFF)}.t-VL{--tc:var(--t-VL)}.t-SL{--tc:var(--t-SL)}.t-PL{--tc:var(--t-PL)}.t-X{--tc:var(--t-X)}
+.av{--pc:#888;display:inline-grid;place-items:center;border-radius:50%;background:var(--pc);color:#fff;font-weight:600;flex:none;width:28px;height:28px;font-size:.85rem;line-height:1}
+.av.sm{width:16px;height:16px;font-size:.6rem}
+.av.lg{width:40px;height:40px;font-size:1.1rem}
+
+/* header */
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.head h1{font-size:1.45rem}
+.who{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 4px 4px 12px}
+.who select{border:0;background:transparent;font-weight:600;padding:4px 2px;max-width:9em}
+.iconbtn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;color:var(--muted)}
+.iconbtn:hover{background:var(--soft);color:var(--fg)}
+.notice{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;color:var(--muted)}
+.notice b{color:var(--fg)}
+
+/* today strip */
+.today{background:var(--accent);color:var(--accent-fg);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.today .lbl{font-size:.82rem;opacity:.85}
+.today h2{font-size:1.15rem}
+.tlist{display:flex;gap:8px;flex-wrap:wrap}
+.tperson{display:flex;align-items:center;gap:8px;background:rgb(255 255 255 / .14);border-radius:12px;padding:6px 10px 6px 6px}
+.tperson .nm{font-weight:600;font-size:.9rem;line-height:1.2}
+.tperson .st{font-size:.8rem;opacity:.9;line-height:1.2}
+
+/* month nav + tabs */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.month{display:flex;align-items:center;gap:4px}
+.month h2{font-size:1.2rem;min-width:8.6em;text-align:center;font-variant-numeric:tabular-nums}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px;gap:2px;overflow-x:auto;max-width:100%}
+.seg button{padding:7px 14px;border-radius:9px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg button[aria-selected=true]{background:var(--card);color:var(--fg);font-weight:600;box-shadow:0 1px 3px rgb(0 0 0 / .08)}
+
+/* actions */
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:500;min-height:38px}
+.pill:hover{border-color:var(--accent)}
+.pill.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.pill .ico{font-size:1.05rem}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.dow{text-align:center;font-size:.78rem;color:var(--muted);font-weight:600}
+.dow.we{color:var(--t-SL)}
+.day{background:var(--card);border-radius:12px;min-height:96px;padding:6px;display:flex;flex-direction:column;gap:4px;text-align:left;min-width:0;border:1px solid transparent;transition:border-color .12s}
+.day:hover{border-color:var(--accent)}
+.day.blank{background:transparent;min-height:0;pointer-events:none}
+.dn{font-weight:600;font-size:.92rem;font-variant-numeric:tabular-nums;line-height:1;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%}
+.day.we .dn{color:var(--t-SL)}
+.day.today .dn{background:var(--accent);color:var(--accent-fg)}
+.ents{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ent{display:flex;align-items:center;gap:3px;min-width:0}
+.tag{display:inline-flex;align-items:center;gap:3px;border-radius:6px;padding:1px 5px;font-size:.72rem;line-height:1.35;background:color-mix(in oklab,var(--tc) 18%,var(--card));color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tag .ico{color:var(--tc);font-size:.85rem}
+.tag.ic{padding:2px 3px}
+.painting .day{cursor:crosshair}
+@media (max-width:620px){
+  .cal{gap:4px}
+  .day{min-height:74px;padding:4px;border-radius:9px}
+  .tag .tx{display:none}
+  .tag{padding:2px 3px}
+  .dn{width:20px;height:20px;font-size:.8rem}
+}
+
+/* grid view */
+.card{background:var(--card);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.pchip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 12px 3px 3px;border:1px solid var(--line);background:var(--card);font-weight:500}
+.pchip[aria-pressed=false]{opacity:.45}
+.ranges{display:flex;gap:8px;flex-wrap:wrap}
+.range{display:inline-flex;gap:6px;align-items:baseline;background:color-mix(in oklab,var(--free) 14%,var(--card));color:var(--fg);border-radius:10px;padding:6px 12px;font-variant-numeric:tabular-nums}
+.range b{font-weight:700}
+.gridwrap{overflow-x:auto;background:var(--card);border-radius:var(--r)}
+.rg{border-collapse:separate;border-spacing:0;font-size:.8rem;font-variant-numeric:tabular-nums}
+.rg th,.rg td{padding:0;text-align:center;border-bottom:1px solid var(--line)}
+.rg thead th{padding:6px 0;font-weight:600;color:var(--muted);min-width:34px}
+.rg thead th .d{display:block;color:var(--fg);font-size:.9rem}
+.rg thead th.we,.rg thead th.we .d{color:var(--t-SL)}
+.rg thead th.td .d{color:var(--accent)}
+.rg .nm{position:sticky;left:0;background:var(--card);text-align:left;padding:6px 10px;white-space:nowrap;z-index:1;font-weight:600;border-right:1px solid var(--line)}
+.rg .nm span{display:inline-flex;align-items:center;gap:6px}
+.rg td.c{height:38px;cursor:pointer}
+.rg td.c:hover{background:var(--soft)}
+.cell{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:color-mix(in oklab,var(--tc) 20%,var(--card));color:var(--tc);font-size:.95rem}
+.cell.multi{font-size:.7rem;font-weight:700;color:var(--fg)}
+.rg tr.free td{border-bottom:0}
+.rg tr.free td.c{cursor:default}
+.ok{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--free);color:#fff;font-size:.9rem}
+.rg tr.free .nm{color:var(--free)}
+
+/* summary */
+.sums{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.sum{background:var(--card);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:12px}
+.sum .top{display:flex;align-items:center;gap:10px}
+.sum .top .nm{font-weight:700;font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:var(--soft);border-radius:10px;padding:8px 10px}
+.kpi .v{font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .k{font-size:.75rem;color:var(--muted)}
+.stack{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--soft)}
+.stack i{display:block;height:100%;background:var(--tc)}
+.breakdown{display:flex;flex-wrap:wrap;gap:6px}
+.breakdown .tag{font-size:.8rem;padding:3px 8px}
+.breakdown .tag b{font-variant-numeric:tabular-nums}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend .tag{font-size:.78rem;padding:2px 8px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgb(10 14 30 / .4);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:700px){.scrim{align-items:center}}
+.sheet{background:var(--card);width:min(520px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+@media (min-width:700px){.sheet{border-radius:22px;padding-top:18px}}
+.grab{width:40px;height:5px;border-radius:9px;background:var(--line);margin:0 auto}
+@media (min-width:700px){.grab{display:none}}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.shead h3{font-size:1.15rem;text-align:center;flex:1}
+.who-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.whob{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.78rem;padding:4px;border-radius:12px;min-width:56px}
+.whob[aria-pressed=true]{background:var(--accent-soft);font-weight:600}
+.whob[aria-pressed=false] .av{opacity:.55}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.tile{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--soft);text-align:left;border:2px solid transparent;min-height:56px}
+.tile .ib{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:color-mix(in oklab,var(--tc) 22%,var(--card));color:var(--tc);font-size:1.15rem;flex:none}
+.tile .nm{font-weight:600;font-size:.92rem;line-height:1.2}
+.tile .hint{font-size:.72rem;color:var(--muted);line-height:1.2}
+.tile[aria-pressed=true]{border-color:var(--tc);background:color-mix(in oklab,var(--tc) 12%,var(--card))}
+.tile[aria-pressed=true] .ib{background:var(--tc);color:#fff}
+.field{width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:44px}
+.field:focus{border-color:var(--accent);outline:none}
+.saved{font-size:.78rem;color:var(--free);min-height:1.2em}
+.others{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.orow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.88rem}
+.btnrow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn{border-radius:12px;padding:9px 16px;font-weight:600;background:var(--soft);min-height:42px}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn.danger{color:var(--t-SL)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* pattern */
+.seq{display:flex;gap:6px;flex-wrap:wrap;min-height:44px;align-items:center;background:var(--soft);border-radius:12px;padding:6px}
+.seq .cell{width:34px;height:34px;font-size:1.05rem}
+.seq .rm{position:relative}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.two label{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--muted)}
+.presets{display:flex;gap:6px;flex-wrap:wrap}
+
+/* paint bar */
+.paintbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--card);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:8px;box-shadow:0 -6px 20px rgb(0 0 0 / .08)}
+.pbtop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pbtiles{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.pbt{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;background:var(--soft);white-space:nowrap;border:2px solid transparent;font-weight:500}
+.pbt .ico{color:var(--tc);font-size:1.05rem}
+.pbt[aria-pressed=true]{border-color:var(--tc);background:color-mix(in oklab,var(--tc) 16%,var(--card));font-weight:600}
+
+/* members */
+.mlist{display:flex;flex-direction:column;gap:6px}
+.mitem{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--soft);border-radius:12px;padding:8px 10px}
+.mitem .l{display:flex;align-items:center;gap:10px;min-width:0;font-weight:600}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:30px;height:30px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 1px var(--line)}
+.sw[aria-pressed=true]{box-shadow:0 0 0 2px var(--fg)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:12px;font-size:.88rem;z-index:40;max-width:calc(100% - 32px)}
+.toast.up{bottom:calc(130px + env(safe-area-inset-bottom,0px))}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .2s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.5}}}
+/* login */
+.gate{min-height:100vh;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
+.gate .box{width:min(380px,100%);background:var(--card);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.gate h1{font-size:1.4rem}
+.gate .err{color:var(--t-SL);font-size:.86rem;min-height:1.2em}
+.linkbtn{color:var(--muted);text-decoration:underline;font-size:.85rem;align-self:flex-start}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-4 text-center">ส่งคำขอของคุณ</h1>
-        <div class="space-y-4">
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">ชื่อ</label>
-                <input type="text" id="name" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <div>
-                <label for="employeeId" class="block text-sm font-medium text-gray-700">รหัสพนักงาน</label>
-                <input type="text" id="employeeId" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <div>
-                <label for="electricity" class="block text-sm font-medium text-gray-700">การไฟฟ้า</label>
-                <select id="electricity" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="" disabled selected>เลือกการไฟฟ้า</option>
-                    <option value="การไฟฟ้าลพบุรี">การไฟฟ้าลพบุรี</option>
-                    <option value="การไฟฟ้าท่าวุ้ง">การไฟฟ้าท่าวุ้ง</option>
-                    <option value="การไฟฟ้าหล่มสัก">การไฟฟ้าหล่มสัก</option>
-                </select>
-            </div>
-            <div>
-                <label for="outage" class="block text-sm font-medium text-gray-700">การดับไฟ</label>
-                <select id="outage" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="" disabled selected>เลือกประเภทการดับไฟ</option>
-                    <option value="สวิตชิ่งดับไฟตามปกติ">สวิตชิ่งดับไฟตามปกติ</option>
-                    <option value="สวิตชิ่งด่วน (< 3 วัน)">สวิตชิ่งด่วน (&lt; 3 วัน)</option>
-                </select>
-            </div>
-            <div>
-                <label for="request" class="block text-sm font-medium text-gray-700">รายละเอียดคำขอ</label>
-                <textarea id="request" rows="4" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
-            </div>
-            <div>
-                <label for="pdfFile" class="block text-sm font-medium text-gray-700">อัปโหลดไฟล์ PDF</label>
-                <input type="file" id="pdfFile" accept=".pdf" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <button onclick="submitRequest()" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">ส่งคำขอ</button>
-        </div>
-        <div id="requestList" class="mt-6 space-y-2"></div>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-M" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-A" viewBox="0 0 24 24"><path d="M5 17a7 7 0 0 1 14 0M2 17h20M12 4v3M4.6 9.6l1.6 1.2M19.4 9.6l-1.6 1.2M7 21h10"/></symbol>
+  <symbol id="i-N" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-OT" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-MT" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M15.5 14.6c3 0 5.5 1.6 5.5 4.6"/></symbol>
+  <symbol id="i-OFF" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5 9.5V20h5v-6h4v6h5V9.5"/></symbol>
+  <symbol id="i-VL" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M9 8V5h6v3M3 13h18"/></symbol>
+  <symbol id="i-SL" viewBox="0 0 24 24"><path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z"/></symbol>
+  <symbol id="i-PL" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></symbol>
+  <symbol id="i-X" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.3.6 3.5 2.6 3.5 5.8"/></symbol>
+  <symbol id="i-brush" viewBox="0 0 24 24"><path d="M14 4l6 6-9 9H5v-6z M12 6l6 6"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+</svg>
+
+<div class="gate" id="gate" hidden>
+  <form class="box" id="gateForm">
+    <h1>ตารางเวรของเรา</h1>
+    <div class="muted">ใส่รหัสกลุ่มที่ได้จากเพื่อน เพื่อดูและลงตารางเวร</div>
+    <input class="field" id="codeIn" type="password" autocomplete="current-password" placeholder="รหัสกลุ่ม" required>
+    <div class="err" id="gateErr"></div>
+    <button class="btn primary" type="submit" id="gateBtn">เข้าใช้งาน</button>
+  </form>
+</div>
+<div class="wrap" id="app" hidden>
+  <header class="head">
+    <h1>ตารางเวรของเรา</h1>
+    <div class="who">
+      <label for="meSel" class="muted">ฉันคือ</label>
+      <select id="meSel"></select>
+      <button class="iconbtn" id="manageBtn" type="button" aria-label="จัดการสมาชิก" title="จัดการสมาชิก"><svg class="ico" style="font-size:1.2rem"><use href="#i-users"/></svg></button>
     </div>
+  </header>
 
-    <script>
-        let requests = [];
+  <div id="status" class="notice" hidden></div>
+  <section class="today" id="todayCard" hidden></section>
 
-        function submitRequest() {
-            const name = document.getElementById('name').value;
-            const employeeId = document.getElementById('employeeId').value;
-            const electricity = document.getElementById('electricity').value;
-            const outage = document.getElementById('outage').value;
-            const request = document.getElementById('request').value;
-            const pdfFile = document.getElementById('pdfFile').files[0];
+  <div class="nav">
+    <div class="month">
+      <button class="iconbtn" id="prevBtn" type="button" aria-label="เดือนก่อน"><svg class="ico" style="font-size:1.3rem"><use href="#i-left"/></svg></button>
+      <h2 id="monthTitle"></h2>
+      <button class="iconbtn" id="nextBtn" type="button" aria-label="เดือนถัดไป"><svg class="ico" style="font-size:1.3rem"><use href="#i-right"/></svg></button>
+    </div>
+    <div class="seg" role="tablist">
+      <button role="tab" data-view="cal" id="tab-cal">ปฏิทิน</button>
+      <button role="tab" data-view="grid" id="tab-grid">เทียบวันว่าง</button>
+      <button role="tab" data-view="sum" id="tab-sum">สรุปเดือน</button>
+    </div>
+  </div>
 
-            if (name && employeeId && electricity && outage && request) {
-                const requestObj = {
-                    id: Date.now(),
-                    name: name,
-                    employeeId: employeeId,
-                    electricity: electricity,
-                    outage: outage,
-                    request: request,
-                    timestamp: new Date().toLocaleString('th-TH'),
-                    pdfFile: pdfFile ? pdfFile.name : 'ไม่มีไฟล์'
-                };
-                requests.push(requestObj);
-                document.getElementById('name').value = '';
-                document.getElementById('employeeId').value = '';
-                document.getElementById('electricity').value = '';
-                document.getElementById('outage').value = '';
-                document.getElementById('request').value = '';
-                document.getElementById('pdfFile').value = '';
-                updateRequestList();
-            } else {
-                alert('กรุณากรอกชื่อ, รหัสพนักงาน, การไฟฟ้า, ประเภทการดับไฟ และรายละเอียดคำขอ');
-            }
-        }
+  <section id="view-cal" style="display:flex;flex-direction:column;gap:12px">
+    <div class="actions">
+      <button class="pill primary" type="button" id="paintBtn"><svg class="ico"><use href="#i-brush"/></svg>ลงหลายวัน</button>
+      <button class="pill" type="button" id="patternBtn"><svg class="ico"><use href="#i-repeat"/></svg>ลงเวรเป็นรอบ</button>
+    </div>
+    <div class="cal" id="calGrid"></div>
+    <div class="legend" id="legend"></div>
+  </section>
 
-        function updateRequestList() {
-            const requestList = document.getElementById('requestList');
-            requestList.innerHTML = '';
-            requests.forEach(req => {
-                const div = document.createElement('div');
-                div.className = 'p-3 bg-gray-50 rounded-md';
-                div.innerHTML = 
-                    <p><strong>ชื่อ:</strong> ${req.name}</p>
-                    <p><strong>รหัสพนักงาน:</strong> ${req.employeeId}</p>
-                    <p><strong>การไฟฟ้า:</strong> ${req.electricity}</p>
-                    <p><strong>การดับไฟ:</strong> ${req.outage}</p>
-                    <p><strong>คำขอ:</strong> ${req.request}</p>
-                    <p><strong>ไฟล์:</strong> ${req.pdfFile}</p>
-                    <p class="text-sm text-gray-500"><strong>เวลา:</strong> ${req.timestamp}</p>
-                ;
-                requestList.appendChild(div);
-            });
-        }
-    </script>
+  <section id="view-grid" hidden style="display:flex;flex-direction:column;gap:12px">
+    <div class="card">
+      <div class="muted">เลือกคนที่จะไปด้วยกัน</div>
+      <div class="chips" id="gridPicks"></div>
+      <div class="muted">ช่วงที่ว่างตรงกัน</div>
+      <div class="ranges" id="ranges"></div>
+      <div class="muted" style="font-size:.78rem">นับว่าว่างเมื่อไม่มีเวร ประชุม ลาป่วย หรือลากิจ · วันหยุด ลาพักผ่อน และวันที่ยังไม่ได้ลง นับว่าว่าง</div>
+    </div>
+    <div class="gridwrap"><table class="rg" id="rosterGrid"></table></div>
+  </section>
+
+  <section id="view-sum" hidden style="display:flex;flex-direction:column;gap:12px">
+    <div class="sums" id="sums"></div>
+  </section>
+</div>
+
+<div id="paintHost"></div>
+<div id="sheetHost"></div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+/* ===== ตั้งค่า Supabase: เอามาจาก Project Settings > API ===== */
+const SUPABASE_URL='https://YOUR-PROJECT.supabase.co';
+const SUPABASE_KEY='YOUR-ANON-OR-PUBLISHABLE-KEY';
+/* ============================================================== */
+const TYPES=[
+ {c:'M',name:'เวรเช้า',short:'เช้า',hint:'08–16',busy:1,shift:1},
+ {c:'A',name:'เวรบ่าย',short:'บ่าย',hint:'16–24',busy:1,shift:1},
+ {c:'N',name:'เวรดึก',short:'ดึก',hint:'00–08',busy:1,shift:1},
+ {c:'OT',name:'OT / เวรเสริม',short:'OT',hint:'เวรเพิ่ม',busy:1,shift:1},
+ {c:'MT',name:'ประชุม/อบรม',short:'ประชุม',hint:'งานนอกเวร',busy:1},
+ {c:'OFF',name:'วันหยุด',short:'หยุด',hint:'ว่าง',busy:0,whole:1},
+ {c:'VL',name:'ลาพักผ่อน',short:'พักร้อน',hint:'ว่าง',busy:0,whole:1,leave:1},
+ {c:'SL',name:'ลาป่วย',short:'ป่วย',hint:'ทั้งวัน',busy:1,whole:1,leave:1},
+ {c:'PL',name:'ลากิจ',short:'กิจ',hint:'ทั้งวัน',busy:1,whole:1,leave:1},
+ {c:'X',name:'ธุระอื่น',short:'อื่นๆ',hint:'ไม่ว่าง',busy:1}
+];
+const T=Object.fromEntries(TYPES.map(t=>[t.c,t]));
+const PCOLORS=['#3a50e0','#e0573a','#14967f','#9b4fd6','#d68a00','#d23a7a','#2f86d6','#5f8f2c','#8a6250','#4b5468'];
+const MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const DOW=['อา','จ','อ','พ','พฤ','ศ','ส'];
+const DOWF=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const PRESETS=[
+  {name:'ช ช บ บ ด ด หยุด หยุด',seq:['M','M','A','A','N','N','OFF','OFF']},
+  {name:'ช บ ด หยุด',seq:['M','A','N','OFF']},
+  {name:'จ–ศ เช้า, ส–อา หยุด',seq:['M','M','M','M','M','OFF','OFF'],weekAlign:1}
+];
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const ymd=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const fmt=dt=>ymd(dt.getFullYear(),dt.getMonth(),dt.getDate());
+const addDays=(s,k)=>{const d=parse(s);d.setDate(d.getDate()+k);return fmt(d)};
+const icon=c=>`<svg class="ico"><use href="#i-${c}"/></svg>`;
+const now=new Date();const todayStr=fmt(now);
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function ini(n){const s=[...String(n||'').trim()];let i=0;while(i<s.length-1&&'เแโใไ'.includes(s[i]))i++;return s[i]||'?'}
+const av=(m,cls='')=>`<span class="av ${cls}" style="--pc:${esc(m.color)}">${esc(ini(m.name))}</span>`;
+const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
+
+const S={db:null,members:[],entries:new Map(),me:lsGet('roster.me')||'',view:lsGet('roster.view')||'cal',
+  y:now.getFullYear(),m:now.getMonth(),paint:null,paintOn:false,gridSel:null,loaded:false,sb:null,code:'',ch:null,dirty:0};
+if(!['cal','grid','sum'].includes(S.view)) S.view='cal';
+
+function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;t.classList.toggle('up',S.paintOn);clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2400)}
+function status(html){const s=$('status');if(!html){s.hidden=true;return}s.innerHTML=html;s.hidden=false}
+const memberById=id=>S.members.find(m=>m.id===id);
+const ent=(mid,date)=>S.entries.get(mid+'_'+date);
+const itemsOf=(mid,date)=>{const e=ent(mid,date);return e?e.items:[]};
+const noteOf=(mid,date)=>{const e=ent(mid,date);return e?e.note||'':''};
+const isBusy=(mid,date)=>itemsOf(mid,date).some(c=>T[c]&&T[c].busy);
+
+/* ---------- writes ---------- */
+function guard(){
+  if(!S.sb||!S.code){toast('ยังเชื่อมต่อฐานข้อมูลไม่ได้');return false}
+  return true;
+}
+async function rpc(fn,args){
+  const {data,error}=await S.sb.rpc(fn,{p_code:S.code,...args});
+  if(error){
+    if(String(error.message||'').includes('invalid_code')) logout('รหัสกลุ่มถูกเปลี่ยน กรุณาใส่รหัสใหม่');
+    throw error;
+  }
+  return data;
+}
+function ping(){try{S.ch&&S.ch.send({type:'broadcast',event:'changed',payload:{}})}catch(e){}}
+const writeQ=new Map();
+async function saveDay(mid,date,items,note,quiet){
+  if(!guard()) return false;
+  const key=mid+'_'+date,prev=S.entries.get(key);
+  const empty=!items.length&&!note;
+  if(empty) S.entries.delete(key); else S.entries.set(key,{member:mid,date,items,note:note||''});
+  S.dirty=Date.now();
+  renderMain();
+  const run=(writeQ.get(key)||Promise.resolve()).then(()=>rpc('roster_save_entry',{p_member:mid,p_day:date,p_items:items,p_note:note||''}));
+  writeQ.set(key,run.catch(()=>{}));
+  try{await run;S.dirty=Date.now();ping();return true}
+  catch(e){
+    if(prev) S.entries.set(key,prev); else S.entries.delete(key);
+    if(!quiet) toast('บันทึกไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
+    renderMain();return false;
+  }
+}
+function toggleType(items,c){
+  if(items.includes(c)) return items.filter(x=>x!==c);
+  if(T[c].whole) return [c];
+  const out=items.filter(x=>!T[x].whole).concat(c);
+  return TYPES.map(t=>t.c).filter(x=>out.includes(x));
+}
+
+/* ---------- render ---------- */
+function render(){
+  $('monthTitle').textContent=`${MONTHS[S.m]} ${S.y+543}`;
+  renderMeSel();
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-selected',b.dataset.view===S.view));
+  renderMain();
+}
+function renderMain(){
+  ['cal','grid','sum'].forEach(v=>$('view-'+v).hidden=S.view!==v);
+  renderToday();
+  if(S.view==='cal') renderCal();
+  if(S.view==='grid') renderGrid();
+  if(S.view==='sum') renderSum();
+  if(S.paintOn) drawPaint();
+  if(SH&&SH.kind==='day') drawSheet(true);
+}
+function renderMeSel(){
+  const sel=$('meSel');
+  if(S.loaded&&S.me&&!memberById(S.me)){S.me=''}
+  const html=['<option value="">เลือกชื่อ</option>'].concat(S.members.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`)).join('');
+  if(sel._h!==html){sel.innerHTML=html;sel._h=html}
+  sel.value=S.me;
+}
+function renderToday(){
+  const el=$('todayCard');
+  if(!S.members.length){el.hidden=true;return}
+  const d=new Date();
+  el.hidden=false;
+  el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]}</h2></div>
+   <div class="tlist">${S.members.map(m=>{const its=itemsOf(m.id,todayStr);
+     return `<div class="tperson">${av(m)}<div><div class="nm">${esc(m.name)}</div><div class="st">${its.length?its.map(c=>T[c].name).join(' + '):'ยังไม่ได้ลง'}</div></div></div>`}).join('')}</div>`;
+}
+function tagsFor(mid,date,compact){
+  return itemsOf(mid,date).map(c=>`<span class="tag t-${c}" title="${T[c].name}">${icon(c)}<span class="tx">${T[c].short}</span></span>`).join('');
+}
+function renderCal(){
+  const first=new Date(S.y,S.m,1).getDay(),n=daysIn(S.y,S.m);
+  let h=DOW.map((d,i)=>`<div class="dow${i===0||i===6?' we':''}">${d}</div>`).join('');
+  for(let i=0;i<first;i++) h+='<div class="day blank"></div>';
+  for(let d=1;d<=n;d++){
+    const date=ymd(S.y,S.m,d),wd=(first+d-1)%7;
+    let rows='';
+    for(const m of S.members){
+      const its=itemsOf(m.id,date),nt=noteOf(m.id,date);
+      if(!its.length&&!nt) continue;
+      rows+=`<div class="ent">${av(m,'sm')}${tagsFor(m.id,date)}${!its.length&&nt?'<span class="tag t-X">✎</span>':''}</div>`;
+    }
+    h+=`<button type="button" class="day${wd===0||wd===6?' we':''}${date===todayStr?' today':''}" data-date="${date}" aria-label="${d} ${MONTHS[S.m]}"><span class="dn">${d}</span><div class="ents">${rows}</div></button>`;
+  }
+  $('calGrid').innerHTML=h;
+  $('calGrid').classList.toggle('painting',S.paintOn);
+  $('legend').innerHTML=TYPES.map(t=>`<span class="tag t-${t.c}">${icon(t.c)}${t.name}</span>`).join('');
+  if(S.loaded&&!S.members.length) status('<b>เริ่มต้นใช้งาน</b> — กดไอคอน <b>สมาชิก</b> มุมขวาบน เพื่อเพิ่มชื่อคุณ แฟน และเพื่อน แล้วเลือกชื่อตัวเองที่ "ฉันคือ"');
+  else if(S.loaded) status('');
+}
+function gridMembers(){
+  if(!S.gridSel) S.gridSel=new Set(S.members.map(m=>m.id));
+  return S.members.filter(m=>S.gridSel.has(m.id));
+}
+function renderGrid(){
+  const sel=gridMembers(),n=daysIn(S.y,S.m);
+  $('gridPicks').innerHTML=S.members.length?S.members.map(m=>`<button type="button" class="pchip" data-gp="${esc(m.id)}" aria-pressed="${S.gridSel.has(m.id)}">${av(m)}${esc(m.name)}</button>`).join(''):'<span class="muted">ยังไม่มีสมาชิก</span>';
+  let head='<thead><tr><th class="nm"></th>';
+  for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),wd=new Date(S.y,S.m,d).getDay();head+=`<th class="${wd===0||wd===6?'we':''}${date===todayStr?' td':''}">${DOW[wd]}<span class="d">${d}</span></th>`}
+  head+='</tr></thead>';
+  let body='<tbody>';const free=[];
+  for(const m of S.members){
+    if(!S.gridSel.has(m.id)) continue;
+    body+=`<tr><td class="nm"><span>${av(m,'sm')}${esc(m.name)}</span></td>`;
+    for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),its=itemsOf(m.id,date);
+      body+=`<td class="c" data-date="${date}" data-mid="${esc(m.id)}" title="${its.map(c=>T[c].name).join(', ')}">${its.length===1?`<span class="cell t-${its[0]}">${icon(its[0])}</span>`:its.length>1?`<span class="cell multi t-${its[0]}">${its.length}</span>`:''}</td>`}
+    body+='</tr>';
+  }
+  if(sel.length){
+    body+='<tr class="free"><td class="nm"><span>ว่างตรงกัน</span></td>';
+    for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d);const ok=sel.every(m=>!isBusy(m.id,date));if(ok) free.push(d);
+      body+=`<td class="c">${ok?`<span class="ok">${icon('check')}</span>`:''}</td>`}
+    body+='</tr>';
+  }
+  $('rosterGrid').innerHTML=head+body+'</tbody>';
+  const ranges=[];let st=null,pv=null;
+  for(const d of free.concat([999])){if(st===null){st=pv=d;continue}if(d===pv+1){pv=d;continue}ranges.push([st,pv]);st=pv=d}
+  ranges.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0])||a[0]-b[0]);
+  $('ranges').innerHTML=!sel.length?'<span class="muted">เลือกอย่างน้อย 1 คน</span>':ranges.length?ranges.slice(0,8).map(([a,b])=>`<span class="range"><b>${a===b?a:a+'–'+b} ${MS[S.m]}</b><span class="muted">${b-a+1} วัน</span></span>`).join(''):'<span class="muted">เดือนนี้ไม่มีวันที่ว่างตรงกันทุกคน</span>';
+}
+function renderSum(){
+  const pre=`${S.y}-${pad(S.m+1)}-`;
+  if(!S.members.length){$('sums').innerHTML='<div class="notice">ยังไม่มีสมาชิก</div>';return}
+  $('sums').innerHTML=S.members.map(m=>{
+    const c=Object.fromEntries(TYPES.map(t=>[t.c,0]));
+    for(const e of S.entries.values()) if(e.member===m.id&&e.date.startsWith(pre)) e.items.forEach(x=>{if(x in c)c[x]++});
+    const shifts=TYPES.filter(t=>t.shift).reduce((s,t)=>s+c[t.c],0);
+    const leave=TYPES.filter(t=>t.leave).reduce((s,t)=>s+c[t.c],0);
+    const total=Object.values(c).reduce((a,b)=>a+b,0);
+    const nz=TYPES.filter(t=>c[t.c]);
+    return `<article class="sum"><div class="top">${av(m,'lg')}<div style="min-width:0"><div class="nm">${esc(m.name)}</div><div class="muted">${MONTHS[S.m]} ${S.y+543}</div></div></div>
+      <div class="kpis"><div class="kpi"><div class="v">${shifts}</div><div class="k">เวรทั้งหมด</div></div><div class="kpi"><div class="v">${c.OFF}</div><div class="k">วันหยุด</div></div><div class="kpi"><div class="v">${leave}</div><div class="k">วันลา</div></div></div>
+      ${total?`<div class="stack">${nz.map(t=>`<i class="t-${t.c}" style="width:${c[t.c]/total*100}%" title="${t.name} ${c[t.c]}"></i>`).join('')}</div>
+      <div class="breakdown">${nz.map(t=>`<span class="tag t-${t.c}">${icon(t.c)}${t.short} <b>${c[t.c]}</b></span>`).join('')}</div>`:'<div class="muted">เดือนนี้ยังไม่ได้ลงอะไร</div>'}
+    </article>`}).join('');
+}
+
+/* ---------- sheets ---------- */
+let SH=null;
+function closeSheet(){SH=null;$('sheetHost').innerHTML=''}
+function openDay(date,mid){
+  mid=mid||S.me||(S.members[0]&&S.members[0].id)||'';
+  SH={kind:'day',date,mid};drawSheet();
+}
+function drawSheet(soft){
+  if(!SH){$('sheetHost').innerHTML='';return}
+  let inner='';
+  if(SH.kind==='day'){
+    const dt=parse(SH.date);
+    const items=itemsOf(SH.mid,SH.date);
+    if(soft){ // live refresh: update tiles + others without losing note focus
+      document.querySelectorAll('[data-tile]').forEach(b=>b.setAttribute('aria-pressed',items.includes(b.dataset.tile)));
+      const o=$('othersBox');if(o) o.innerHTML=othersHtml();
+      return;
+    }
+    inner=`<div class="shead"><button class="iconbtn" type="button" data-dstep="-1" aria-label="วันก่อน"><svg class="ico" style="font-size:1.3rem"><use href="#i-left"/></svg></button>
+      <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]}</h3>
+      <button class="iconbtn" type="button" data-dstep="1" aria-label="วันถัดไป"><svg class="ico" style="font-size:1.3rem"><use href="#i-right"/></svg></button></div>
+      ${S.members.length?`<div class="who-row">${S.members.map(m=>`<button type="button" class="whob" data-who="${esc(m.id)}" aria-pressed="${m.id===SH.mid}">${av(m)}<span>${esc(m.name)}</span></button>`).join('')}</div>
+      <div class="tiles">${TYPES.map(t=>`<button type="button" class="tile t-${t.c}" data-tile="${t.c}" aria-pressed="${items.includes(t.c)}"><span class="ib">${icon(t.c)}</span><span><span class="nm">${t.name}</span><br><span class="hint">${t.hint}</span></span></button>`).join('')}</div>
+      <input class="field" id="noteIn" type="text" maxlength="200" placeholder="หมายเหตุ (ไม่บังคับ) เช่น ประชุม 13:00, แลกเวรกับเอ" value="${esc(noteOf(SH.mid,SH.date))}">
+      <div class="btnrow" style="justify-content:space-between;align-items:center"><span class="saved" id="savedMsg">แตะเพื่อเลือก บันทึกให้อัตโนมัติ</span><button class="btn primary" type="button" data-close>เสร็จ</button></div>`
+      :`<div class="notice">ยังไม่มีสมาชิก กดไอคอนสมาชิกมุมขวาบนเพื่อเพิ่มชื่อก่อน</div>`}
+      <div class="others"><div class="muted">คนอื่นในวันนี้</div><div id="othersBox" style="display:flex;flex-direction:column;gap:8px">${othersHtml()}</div></div>`;
+  }
+  if(SH.kind==='pattern') inner=patternHtml();
+  if(SH.kind==='members') inner=membersHtml();
+  $('sheetHost').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`;
+}
+function othersHtml(){
+  const o=S.members.filter(m=>m.id!==SH.mid&&(itemsOf(m.id,SH.date).length||noteOf(m.id,SH.date)));
+  return o.length?o.map(m=>`<div class="orow">${av(m,'sm')}<b>${esc(m.name)}</b>${itemsOf(m.id,SH.date).map(c=>`<span class="tag t-${c}">${icon(c)}${T[c].name}</span>`).join('')}${noteOf(m.id,SH.date)?`<span class="muted">${esc(noteOf(m.id,SH.date))}</span>`:''}</div>`).join(''):'<div class="muted">ยังไม่มีใครลงไว้</div>';
+}
+function flashSaved(){const s=$('savedMsg');if(s){s.textContent='บันทึกแล้ว ✓';clearTimeout(flashSaved._t);flashSaved._t=setTimeout(()=>{if($('savedMsg'))$('savedMsg').textContent='แตะเพื่อเลือก บันทึกให้อัตโนมัติ'},1500)}}
+
+/* pattern */
+function openPattern(){
+  if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}
+  SH={kind:'pattern',seq:[],start:todayStr,end:ymd(S.y,S.m,daysIn(S.y,S.m)),confirm:false,busy:false};
+  if(SH.end<SH.start) SH.end=addDays(SH.start,30);
+  drawSheet();
+}
+function patternHtml(){
+  const me=memberById(S.me);
+  const days=SH.start&&SH.end&&SH.end>=SH.start?Math.round((parse(SH.end)-parse(SH.start))/864e5)+1:0;
+  return `<div class="shead"><span style="width:34px"></span><h3>ลงเวรเป็นรอบ</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
+    <div class="muted" style="display:flex;align-items:center;gap:6px">ลงให้ ${av(me,'sm')}<b style="color:var(--fg)">${esc(me.name)}</b></div>
+    <div><div class="muted" style="margin-bottom:6px">รูปแบบสำเร็จรูป</div><div class="presets">${PRESETS.map((p,i)=>`<button class="pill" type="button" data-preset="${i}">${p.name}</button>`).join('')}</div></div>
+    <div><div class="muted" style="margin-bottom:6px">หรือแตะสร้างรอบเอง (แตะไอคอนในรอบเพื่อลบ)</div>
+      <div class="seq">${SH.seq.length?SH.seq.map((c,i)=>`<button type="button" class="cell t-${c}" data-rm="${i}" title="${T[c].name} — แตะเพื่อลบ">${icon(c)}</button>`).join(''):'<span class="muted" style="padding:0 6px">ยังว่าง</span>'}</div>
+      <div class="pbtiles" style="margin-top:8px;flex-wrap:wrap">${TYPES.filter(t=>t.c!=='X').map(t=>`<button type="button" class="pbt t-${t.c}" data-add="${t.c}">${icon(t.c)}${t.short}</button>`).join('')}</div></div>
+    <div class="two"><label>เริ่มวันที่<input class="field" type="date" id="pStart" value="${SH.start}"></label><label>ถึงวันที่<input class="field" type="date" id="pEnd" value="${SH.end}"></label></div>
+    ${SH.confirm?`<div class="notice">จะลงเวร <b>${days} วัน</b> ทับของเดิมในช่วงนี้ ยืนยันไหม?</div>
+      <div class="btnrow"><button class="btn" type="button" data-pcancel>ยกเลิก</button><button class="btn primary" type="button" data-papply ${SH.busy?'disabled':''}>${SH.busy?'กำลังบันทึก…':'ยืนยัน ลงเลย'}</button></div>`
+     :`<div class="btnrow"><button class="btn primary" type="button" data-pask ${SH.seq.length&&days?'':'disabled'}>ลง ${days||0} วัน</button></div>`}`;
+}
+async function applyPattern(){
+  if(!guard()) return;
+  SH.busy=true;drawSheet();
+  const seq=SH.seq.slice(),rows=[];let d=SH.start,i=0;
+  while(d<=SH.end&&rows.length<400){rows.push({date:d,items:[seq[i%seq.length]],note:noteOf(S.me,d)});d=addDays(d,1);i++}
+  try{
+    const n=await rpc('roster_save_many',{p_member:S.me,p_rows:rows});
+    rows.forEach(r=>S.entries.set(S.me+'_'+r.date,{member:S.me,date:r.date,items:r.items,note:r.note}));
+    S.dirty=Date.now();ping();closeSheet();renderMain();toast(`ลงเวรแล้ว ${n} วัน`);
+  }catch(e){SH.busy=false;drawSheet();toast('ลงเวรไม่สำเร็จ ลองอีกครั้ง')}
+}
+
+/* members */
+function openMembers(){SH={kind:'members',name:'',color:PCOLORS[S.members.length%PCOLORS.length],confirm:null};drawSheet()}
+function membersHtml(){
+  return `<div class="shead"><span style="width:34px"></span><h3>สมาชิก</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
+    <div class="mlist">${S.members.length?S.members.map(m=>`<div class="mitem"><span class="l">${av(m)}${esc(m.name)}</span>${SH.confirm===m.id?`<span style="display:flex;gap:6px"><button class="btn" type="button" data-mcancel>ไม่ลบ</button><button class="btn danger" type="button" data-mdel="${esc(m.id)}">ลบเลย</button></span>`:`<button class="btn" type="button" data-mask="${esc(m.id)}">ลบ</button>`}</div>`).join(''):'<div class="muted">ยังไม่มีใคร เพิ่มชื่อแรกด้านล่าง</div>'}</div>
+    <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px">
+      <div style="display:flex;gap:8px"><input class="field" id="mName" type="text" maxlength="24" placeholder="ชื่อเล่น เช่น ต้น, แฟน" value="${esc(SH.name)}"><button class="btn primary" type="button" id="mAdd">เพิ่ม</button></div>
+      <div class="colors">${PCOLORS.map(c=>`<button type="button" class="sw" style="background:${c}" data-sw="${c}" aria-pressed="${SH.color===c}" aria-label="เลือกสี"></button>`).join('')}</div>
+    </div>
+    <div class="muted">ให้เพื่อนลงเวรเอง: ส่งลิงก์เว็บนี้พร้อมรหัสกลุ่มให้เพื่อน</div>
+    <button type="button" class="linkbtn" id="logoutBtn">ออกจากกลุ่มในเครื่องนี้</button>`;
+}
+async function addMember(){
+  const name=$('mName').value.trim();if(!name){$('mName').focus();return}
+  if(!guard()) return;
+  try{
+    const id=await rpc('roster_add_member',{p_name:name,p_color:SH.color});
+    if(!S.me){S.me=id;lsSet('roster.me',S.me)}
+    if(S.gridSel) S.gridSel.add(id);
+    ping();await loadData(true);
+    SH.name='';SH.color=PCOLORS[(S.members.length+1)%PCOLORS.length];toast(`เพิ่ม ${name} แล้ว`);drawSheet();
+    setTimeout(()=>$('mName')&&$('mName').focus(),0);
+  }catch(e){toast('เพิ่มไม่สำเร็จ ลองอีกครั้ง')}
+}
+
+/* paint */
+function drawPaint(){
+  if(!S.paintOn){$('paintHost').innerHTML='';return}
+  const me=memberById(S.me);
+  $('paintHost').innerHTML=`<div class="paintbar"><div class="pbtop"><span class="muted" style="display:flex;align-items:center;gap:6px">${me?av(me,'sm')+'<b style="color:var(--fg)">'+esc(me.name)+'</b> · ':''}${S.paint?'แตะวันที่ในปฏิทินเพื่อลง/ลบ':'เลือกประเภทก่อน'}</span><button class="btn primary" type="button" id="paintDone">เสร็จ</button></div>
+   <div class="pbtiles">${TYPES.map(t=>`<button type="button" class="pbt t-${t.c}" data-pt="${t.c}" aria-pressed="${S.paint===t.c}">${icon(t.c)}${t.name}</button>`).join('')}</div></div>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target;const q=s=>t.closest(s);
+  if(t.id==='scrim'||q('[data-close]')){closeSheet();return}
+  let b;
+  if(b=q('[data-tile]')){if(!SH) return;const next=toggleType(itemsOf(SH.mid,SH.date),b.dataset.tile);const nt=$('noteIn')?$('noteIn').value.trim():'';saveDay(SH.mid,SH.date,next,nt).then(r=>r&&flashSaved());return}
+  if(b=q('[data-who]')){commitNote();SH.mid=b.dataset.who;drawSheet();return}
+  if(b=q('[data-dstep]')){commitNote();SH.date=addDays(SH.date,+b.dataset.dstep);const d=parse(SH.date);if(d.getMonth()!==S.m||d.getFullYear()!==S.y){S.y=d.getFullYear();S.m=d.getMonth();subscribeEntries();render()}drawSheet();return}
+  if(b=q('[data-preset]')){const p=PRESETS[+b.dataset.preset];SH.seq=p.seq.slice();
+    if(p.weekAlign){const d=parse(SH.start);const back=(d.getDay()+6)%7;SH.seq=p.seq.slice(back).concat(p.seq.slice(0,back))}
+    SH.confirm=false;drawSheet();return}
+  if(b=q('[data-add]')){if(SH.seq.length<21)SH.seq.push(b.dataset.add);SH.confirm=false;drawSheet();return}
+  if(b=q('[data-rm]')){SH.seq.splice(+b.dataset.rm,1);SH.confirm=false;drawSheet();return}
+  if(q('[data-pask]')){SH.confirm=true;drawSheet();return}
+  if(q('[data-pcancel]')){SH.confirm=false;drawSheet();return}
+  if(q('[data-papply]')){if(!SH.busy) applyPattern();return}
+  if(b=q('[data-sw]')){SH.name=$('mName').value;SH.color=b.dataset.sw;drawSheet();return}
+  if(b=q('[data-mask]')){SH.confirm=b.dataset.mask;drawSheet();return}
+  if(q('[data-mcancel]')){SH.confirm=null;drawSheet();return}
+  if(b=q('[data-mdel]')){const id=b.dataset.mdel;SH.confirm=null;if(!guard())return;rpc('roster_delete_member',{p_member:id}).then(()=>{ping();toast('ลบแล้ว');return loadData(true)}).catch(()=>toast('ลบไม่สำเร็จ'));return}
+  if(q('#logoutBtn')){closeSheet();logout('');return}
+  if(q('#mAdd')){addMember();return}
+  if(b=q('[data-pt]')){S.paint=b.dataset.pt;drawPaint();return}
+  if(q('#paintDone')){S.paintOn=false;S.paint=null;drawPaint();renderCal();return}
+  if(b=q('[data-gp]')){const id=b.dataset.gp;S.gridSel.has(id)?S.gridSel.delete(id):S.gridSel.add(id);renderGrid();return}
+  if(b=q('#calGrid .day[data-date]')){
+    const date=b.dataset.date;
+    if(S.paintOn){if(!S.paint){toast('เลือกประเภทเวรด้านล่างก่อน');return}if(!memberById(S.me)){toast('เลือกชื่อตัวเองก่อน');return}
+      saveDay(S.me,date,toggleType(itemsOf(S.me,date),S.paint),noteOf(S.me,date));return}
+    openDay(date);return}
+  if(b=q('#rosterGrid td.c[data-mid]')){openDay(b.dataset.date,b.dataset.mid);return}
+});
+function commitNote(){
+  const n=$('noteIn');if(!n||!SH||SH.kind!=='day') return;
+  const v=n.value.trim();if(v===noteOf(SH.mid,SH.date)) return;
+  saveDay(SH.mid,SH.date,itemsOf(SH.mid,SH.date),v).then(r=>r&&flashSaved());
+}
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='noteIn') commitNote();
+  if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render()}
+  if(t.id==='pStart'){SH.start=t.value;SH.confirm=false;drawSheet()}
+  if(t.id==='pEnd'){SH.end=t.value;SH.confirm=false;drawSheet()}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&SH){commitNote();closeSheet()}
+  if(e.key==='Enter'&&e.target.id==='mName') addMember();
+  if(e.key==='Enter'&&e.target.id==='noteIn') e.target.blur();
+});
+
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{S.view=b.dataset.view;lsSet('roster.view',S.view);if(S.view!=='cal'){S.paintOn=false;drawPaint()}render()}));
+function shiftMonth(k){let m=S.m+k,y=S.y;if(m<0){m=11;y--}if(m>11){m=0;y++}S.y=y;S.m=m;subscribeEntries();render()}
+$('prevBtn').onclick=()=>shiftMonth(-1);$('nextBtn').onclick=()=>shiftMonth(1);
+$('monthTitle').onclick=()=>{S.y=now.getFullYear();S.m=now.getMonth();subscribeEntries();render()};
+$('manageBtn').onclick=openMembers;
+$('patternBtn').onclick=openPattern;
+$('paintBtn').onclick=()=>{if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}S.paintOn=true;S.paint=S.paint||'M';drawPaint();renderCal()};
+
+/* ---------- data ---------- */
+function range(){
+  const a=addDays(ymd(S.y,S.m,1),-7),b=addDays(ymd(S.y,S.m,daysIn(S.y,S.m)),7);
+  return [todayStr<a?todayStr:a, todayStr>b?todayStr:b];
+}
+let loadSeq=0;
+async function loadData(force){
+  if(!S.sb||!S.code) return false;
+  const my=++loadSeq,[a,b]=range(),started=Date.now();
+  try{
+    const res=await rpc('roster_load',{p_from:a,p_to:b});
+    if(my!==loadSeq) return true;                       // a newer load is running
+    if(!force&&S.dirty>started){softReload();return true} // a local write landed meanwhile; try again shortly
+    S.members=(res.members||[]).filter(m=>m.name);
+    for(const [k,e] of [...S.entries]) if(e.date>=a&&e.date<=b) S.entries.delete(k);
+    (res.entries||[]).forEach(e=>S.entries.set(e.member+'_'+e.date,{member:e.member,date:e.date,items:(e.items||[]).filter(x=>T[x]),note:e.note||''}));
+    if(S.gridSel) for(const id of [...S.gridSel]) if(!memberById(id)) S.gridSel.delete(id);
+    if(!S.ch) joinChannel(res.group_id);
+    S.loaded=true;status('');
+    render();if(SH&&SH.kind==='members') drawSheet();
+    return true;
+  }catch(e){
+    if(my===loadSeq&&S.code) status('โหลดข้อมูลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วรีเฟรชหน้า');
+    return false;
+  }
+}
+function subscribeEntries(){loadData(true)}
+let reloadT=null;
+function softReload(){clearTimeout(reloadT);reloadT=setTimeout(()=>loadData(),800)}
+function joinChannel(gid){
+  try{
+    S.ch=S.sb.channel('roster-'+gid,{config:{broadcast:{self:false}}})
+      .on('broadcast',{event:'changed'},softReload)
+      .subscribe();
+  }catch(e){S.ch=null}
+}
+function logout(msg){
+  S.code='';lsSet('roster.code','');
+  if(S.ch){try{S.sb.removeChannel(S.ch)}catch(e){}S.ch=null}
+  S.members=[];S.entries.clear();S.loaded=false;
+  $('app').hidden=true;$('gate').hidden=false;$('gateErr').textContent=msg||'';$('codeIn').value='';
+}
+async function enter(code){
+  S.code=code;status('<b>กำลังโหลดตาราง…</b>');
+  $('gate').hidden=true;$('app').hidden=false;render();
+  return loadData(true);
+}
+$('gateForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const code=$('codeIn').value.trim();if(!code||!S.sb) return;
+  $('gateBtn').disabled=true;$('gateErr').textContent='';
+  try{
+    const {error}=await S.sb.rpc('roster_load',{p_code:code,p_from:todayStr,p_to:todayStr});
+    if(error){$('gateErr').textContent=String(error.message||'').includes('invalid_code')?'รหัสกลุ่มไม่ถูกต้อง':'เชื่อมต่อไม่ได้ ลองอีกครั้ง';return}
+    lsSet('roster.code',code);await enter(code);
+  }catch(err){$('gateErr').textContent='เชื่อมต่อไม่ได้ ลองอีกครั้ง'}
+  finally{$('gateBtn').disabled=false}
+});
+async function start(){
+  if(!window.supabase||SUPABASE_URL.includes('YOUR-PROJECT')){
+    $('app').hidden=false;render();
+    status('<b>ยังไม่ได้ตั้งค่า Supabase</b> — เปิดไฟล์ index.html แล้วใส่ SUPABASE_URL และ SUPABASE_KEY ที่ส่วนบนของสคริปต์');
+    return;
+  }
+  S.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false}});
+  const saved=lsGet('roster.code');
+  if(saved) await enter(saved); else {$('gate').hidden=false;$('codeIn').focus()}
+  // fallback refresh when realtime is off or the phone was asleep
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden) softReload()});
+  setInterval(()=>{if(!document.hidden) loadData()},60000);
+}
+start();
+</script>
 </body>
 </html>
