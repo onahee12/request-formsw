@@ -641,11 +641,7 @@ async function saveE(e,quiet){
 // ตั้งเวร: kind = '' (ไม่มี) | 'R' | 'C'
 function setShift(e,c,kind){
   if(c==='K'){delete e.shifts.KU;delete e.shifts.KL;return e}
-  if(isK(c)&&kind){
-    kind='R';
-    for(const k of ['KU','KL','N','M']) if(k!==c) delete e.shifts[k];
-    if(e.shifts.A&&e.shifts.A.k==='C') delete e.shifts.A;
-  } else if(kind&&hasK(e)&&(c==='N'||c==='M'||kind==='C')) return e;   // ทับเวลาเวรไต
+  if(isK(c)&&kind){kind='R';delete e.shifts[c==='KU'?'KL':'KU']}   // เวรไตวันละอย่าง ขึ้นคู่กับเวรอื่นได้ทุกเวร
   if(!kind) delete e.shifts[c];
   else{const old=e.shifts[c];e.shifts[c]={k:kind,away:kind==='R'&&old&&old.k==='R'?old.away||'':''}}
   if(kind==='R') e.items=e.items.filter(x=>x!=='OFF');
@@ -897,7 +893,7 @@ function drawDayBody(){
   const rateOf=c=>{const w=d.worked.find(x=>x.c===c);return w&&w.k==='C'?w.rate:null};
   box.innerHTML=`<div class="secl">เวรวันนี้ <span>เรียงตามเวลา ดึก → เช้า → บ่าย</span></div>
     <div class="srows">${SHIFTS.map(s=>{const v=e.shifts[s.c],k=v?v.k:'',r=rateOf(s.c);
-      const kd=hasK(e),blockAll=kd&&(s.c==='N'||s.c==='M'),blockC=kd;
+      const blockAll=false,blockC=false;
       return `<div class="srow t-${s.c}${k?' on':''}${blockAll?' dis':''}">
         <span class="ib">${icon(s.c)}</span>
         <div class="si"><b>${s.name}</b><span class="hint">${s.hint}${r?` · <span class="rate ${rc(r)}">แทน ${fx(r)}</span>`:''}</span></div>
@@ -906,14 +902,13 @@ function drawDayBody(){
           <button type="button" data-sk="${s.c}:R" aria-pressed="${k==='R'}" ${blockAll?'disabled':''}>ประจำ</button>
           <button type="button" data-sk="${s.c}:C" aria-pressed="${k==='C'}" ${blockC?'disabled':''}>แทน</button>
         </div>
-        ${blockAll?'<div class="blk-note">ทับเวลาเวรไต</div>':''}
         ${k==='R'?`<div class="sa" role="group" aria-label="สถานะ${s.name}">
           <button type="button" class="sac yes" data-sa="${s.c}:" aria-pressed="${!v.away}">${icon('check')}ขึ้นจริง</button>
           ${REASONS.map(x=>`<button type="button" class="sac t-${x.c}" data-sa="${s.c}:${x.c}" aria-pressed="${v.away===x.c}">${icon(x.c)}${x.short==='แลกเวร'?'แลกเวร':x.name}</button>`).join('')}
         </div>`:''}
       </div>`}).join('')}</div>
     ${(()=>{const kc=e.shifts.KU?'KU':e.shifts.KL?'KL':'',v=kc?e.shifts[kc]:null;
-      return `<div class="secl">เวรไต <span>ลงเป็นประจำเท่านั้น · ขึ้นบ่ายประจำต่อได้</span></div>
+      return `<div class="secl">เวรไต <span>ลงเป็นประจำ · ขึ้นคู่กับเวรอื่นได้ทุกเวร</span></div>
       <div class="srow t-${kc||'KU'}${kc?' on':''}">
         <span class="ib">${icon(kc||'KU')}</span>
         <div class="si"><b>${kc?NAME(kc):'เวรไต'}</b><span class="hint">${kc?SH_[kc].hint:'ไตบน 08.00–18.00 · ไตล่าง 06.00–17.00'}</span></div>
@@ -1022,7 +1017,6 @@ function paintDay(date){
   const [t,c]=S.paint.split(':');const e=getE(S.me,date);
   if(t==='A') toggleAct(e,c);
   else{const kind=t==='R'?'R':'C';
-    if(!isK(c)&&hasK(e)&&(c==='N'||c==='M'||kind==='C')){toast('วันนั้นมีเวรไต ทับเวลากัน');return}
     setShift(e,c,e.shifts[c]&&e.shifts[c].k===kind?'':kind)}
   saveE(e);
 }
