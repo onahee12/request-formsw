@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#3a50e0">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ตารางเวร">
 <title>ตารางเวรของเรา</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap">
@@ -385,6 +390,26 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .srow.dis{opacity:.55}
 .segm button:disabled{opacity:.4;cursor:not-allowed}
 .blk-note{grid-column:1 / -1;font-size:.76rem;color:var(--muted)}
+/* notifications */
+.iconbtn{position:relative}
+.nb-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--free);box-shadow:0 0 0 2px var(--card)}
+.nf-card{background:var(--soft);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.nf-steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.kbd{display:inline-flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-size:.85rem}
+.nf-top{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--soft);border-radius:14px;padding:12px}
+.nf-top .ib{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--card);color:var(--muted);font-size:1.2rem}
+.nf-top.on .ib{background:var(--free);color:#fff}
+.nf-list{display:flex;flex-direction:column;gap:6px}
+.nf-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--soft);border-radius:12px;padding:10px 12px;text-align:left}
+.nf-row:disabled{opacity:.5;cursor:not-allowed}
+.nf-row .ib{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:color-mix(in oklab,var(--tc) 22%,var(--card));color:var(--tc)}
+.nf-row .tx{display:flex;flex-direction:column;line-height:1.3}
+.sw2{width:42px;height:24px;border-radius:99px;background:var(--line);position:relative;transition:background .15s}
+.sw2::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgb(0 0 0 / .2)}
+.nf-row[aria-pressed=true] .sw2{background:var(--free)}
+.nf-row[aria-pressed=true] .sw2::after{transform:translateX(18px)}
+.pchip:disabled{opacity:.4;cursor:not-allowed}
+.nf-ex{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.84rem;line-height:1.5}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -407,6 +432,8 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
   <symbol id="i-KL" viewBox="0 0 24 24"><path d="M12 3c-3.2 4.2-6 7.3-6 10.6a6 6 0 0 0 12 0C18 10.3 15.2 7.2 12 3z"/><path d="M12 11v5M9.8 14l2.2 2.2 2.2-2.2"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.3.6 3.5 2.6 3.5 5.8"/></symbol>
   <symbol id="i-brush" viewBox="0 0 24 24"><path d="M14 4l6 6-9 9H5v-6z M12 6l6 6"/></symbol>
   <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l3 3-3 3M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3M20 13v2a4 4 0 0 1-4 4H4"/></symbol>
@@ -429,6 +456,7 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
     <div class="who">
       <label for="meSel" class="muted">ฉันคือ</label>
       <select id="meSel"></select>
+      <button class="iconbtn" id="notifyBtn" type="button" aria-label="แจ้งเตือน" title="แจ้งเตือน"><svg class="ico" style="font-size:1.2rem"><use href="#i-bell"/></svg><span class="nb-dot" id="nbDot" hidden></span></button>
       <button class="iconbtn" id="manageBtn" type="button" aria-label="จัดการสมาชิก" title="จัดการสมาชิก"><svg class="ico" style="font-size:1.2rem"><use href="#i-users"/></svg></button>
     </div>
   </header>
@@ -483,6 +511,8 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 /* ===== ตั้งค่า Supabase: เอามาจาก Project Settings > API ===== */
 const SUPABASE_URL='https://ovjjkyuacizbclbklipl.supabase.co';
 const SUPABASE_KEY='sb_publishable_yAWqi_fZroYKa1378qzG1Q_nHOdQwry';
+/* ===== แจ้งเตือนเข้ามือถือ: กุญแจสาธารณะ (VAPID public key) ใส่ตัวเดียวกับใน Supabase Secrets ===== */
+const VAPID_PUBLIC='BDoFtTEb6pSpNowZfgLqnFSkjxlis3sWc9fuNbI86Z5jPeBNcC6H7QM3vpW-aCLLR4GgxFzDzh_DcLNRh3TMJVk';
 /* ===== อัตราค่าตอบแทนแทนเวร (แก้ได้) ===== */
 const RATE_SINGLE=1.0;   // แทนเวรเดี่ยว ๆ ในวันนั้น (เช่น มาแทนในวันหยุด)
 const RATE_DOUBLE=1.5;   // วันนั้นขึ้น 2 เวรขึ้นไป: เวรแทนได้ 1.5 เท่า
@@ -879,6 +909,7 @@ function drawSheet(){
   }
   if(SH.kind==='pattern') inner=patternHtml();
   if(SH.kind==='members') inner=membersHtml();
+  if(SH.kind==='notify') inner=notifyHtml();
   $('sheetHost').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`;
   if(SH.kind==='day') drawDayBody();
 }
@@ -1061,7 +1092,8 @@ function commitNote(){
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='noteIn') commitNote();
-  if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render()}
+  if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render();
+    if(pushState()==='ok') currentSub().then(async sub=>{if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});await rpc('roster_push_save',{p_endpoint:sub.endpoint,p_p256dh:sub.toJSON().keys.p256dh,p_auth:sub.toJSON().keys.auth,p_me:S.me||null,p_follow:(r||defaultSet()).follow,p_evening:(r||defaultSet()).evening,p_morning:(r||defaultSet()).morning,p_ua:''})}}).catch(()=>{})}
   if(t.id==='pStart'){SH.start=t.value;SH.confirm=false;drawSheet()}
   if(t.id==='pEnd'){SH.end=t.value;SH.confirm=false;drawSheet()}
 });
@@ -1075,6 +1107,102 @@ function shiftMonth(k){let m=S.m+k,y=S.y;if(m<0){m=11;y--}if(m>11){m=0;y++}S.y=y
 $('prevBtn').onclick=()=>shiftMonth(-1);$('nextBtn').onclick=()=>shiftMonth(1);
 $('monthTitle').onclick=()=>{S.y=now.getFullYear();S.m=now.getMonth();loadData(true);render()};
 $('manageBtn').onclick=openMembers;
+/* ---------- แจ้งเตือนเข้ามือถือ (Web Push) ---------- */
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isStandalone=()=>window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+function pushState(){
+  if(isIOS&&!isStandalone()) return 'ios-install';
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)) return 'unsupported';
+  if(Notification.permission==='denied') return 'denied';
+  return 'ok';
+}
+function b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...b].map(c=>c.charCodeAt(0)))}
+async function swReg(){
+  if(!('serviceWorker' in navigator)) return null;
+  try{return (await navigator.serviceWorker.getRegistration('./'))||(await navigator.serviceWorker.register('sw.js',{scope:'./'}))}catch(e){return null}
+}
+async function currentSub(){const r=await swReg();return r&&r.pushManager?r.pushManager.getSubscription():null}
+async function openNotify(){
+  SH={kind:'notify',state:pushState(),sub:null,set:null,busy:false,msg:''};drawSheet();
+  if(SH.state!=='ok') return;
+  try{
+    const sub=await currentSub();if(!SH||SH.kind!=='notify') return;
+    SH.sub=sub;
+    if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});SH.set=r||null}
+  }catch(e){}
+  if(SH&&SH.kind==='notify') drawSheet();
+}
+function defaultSet(){return {follow:S.members.map(m=>m.id).filter(id=>id!==S.me),evening:true,morning:true}}
+async function saveNotify(){
+  if(!SH.sub) return;
+  const j=SH.sub.toJSON();const st=SH.set||defaultSet();
+  await rpc('roster_push_save',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_me:S.me||null,p_follow:st.follow,p_evening:st.evening,p_morning:st.morning,p_ua:navigator.userAgent.slice(0,200)});
+  updateBell(true);
+}
+async function enablePush(){
+  if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}
+  SH.busy=true;SH.msg='';drawSheet();
+  try{
+    const perm=await Notification.requestPermission();     // ต้องเรียกจากการกดปุ่มโดยตรง
+    if(perm!=='granted'){SH.busy=false;SH.state=perm==='denied'?'denied':'ok';SH.msg='ยังไม่ได้อนุญาตแจ้งเตือน';drawSheet();return}
+    const reg=await swReg();await navigator.serviceWorker.ready;
+    const sub=(await reg.pushManager.getSubscription())||(await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)}));
+    SH.sub=sub;SH.set=SH.set||defaultSet();
+    await saveNotify();
+    SH.busy=false;SH.msg='เปิดแจ้งเตือนแล้ว ✓';drawSheet();
+  }catch(e){SH.busy=false;SH.msg='เปิดแจ้งเตือนไม่สำเร็จ '+(String(e&&e.message||'').includes('roster_push')?'(ยังไม่ได้รัน supabase-update-v5.sql)':'ลองอีกครั้ง');drawSheet()}
+}
+async function disablePush(){
+  SH.busy=true;drawSheet();
+  try{const sub=SH.sub||await currentSub();if(sub){try{await rpc('roster_push_delete',{p_endpoint:sub.endpoint})}catch(e){}await sub.unsubscribe()}}catch(e){}
+  SH.sub=null;SH.set=null;SH.busy=false;SH.msg='ปิดแจ้งเตือนบนเครื่องนี้แล้ว';updateBell(false);drawSheet();
+}
+async function testPush(){
+  if(!SH.sub) return;SH.busy=true;SH.msg='';drawSheet();
+  try{
+    const {data,error}=await S.sb.functions.invoke('roster-notify',{body:{slot:'test',code:S.code,endpoint:SH.sub.endpoint}});
+    SH.msg=error?'ส่งทดสอบไม่สำเร็จ (ตรวจว่าติดตั้ง Edge Function แล้ว)':data&&data.result==='sent'?'ส่งแล้ว รอสักครู่ แจ้งเตือนจะเด้งขึ้นมา':'ส่งไม่สำเร็จ ('+(data&&(data.result||data.error)||'?')+')';
+  }catch(e){SH.msg='ส่งทดสอบไม่สำเร็จ'}
+  SH.busy=false;drawSheet();
+}
+function updateBell(on){const d=$('nbDot');if(d) d.hidden=!on}
+function notifyHtml(){
+  const head=`<div class="shead"><span style="width:34px"></span><h3>แจ้งเตือนเข้ามือถือ</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>`;
+  if(SH.state==='ios-install') return head+`<div class="nf-card">
+      <b>iPhone ต้องเพิ่มเว็บนี้ไว้ที่หน้าจอโฮมก่อน</b>
+      <ol class="nf-steps"><li>กดปุ่ม <span class="kbd">${icon('share')} แชร์</span> ด้านล่างของ Safari</li><li>เลือก <b>"เพิ่มไปยังหน้าจอโฮม"</b> แล้วกด <b>เพิ่ม</b></li><li>เปิดเว็บจาก<b>ไอคอนตารางเวร</b>บนหน้าจอโฮม แล้วกด 🔔 อีกครั้ง</li></ol>
+      <div class="muted">ต้องใช้ iOS 16.4 ขึ้นไป · ปลอดภัย เว็บเข้าถึงข้อมูลอื่นในเครื่องไม่ได้</div></div>`;
+  if(SH.state==='unsupported') return head+`<div class="notice">เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือน ลองเปิดด้วย Chrome (Android) หรือ Safari (iPhone)</div>`;
+  if(SH.state==='denied') return head+`<div class="notice"><b>แจ้งเตือนถูกปิดไว้</b><br>เปิดได้ที่ ตั้งค่าของโทรศัพท์ → การแจ้งเตือน → ตารางเวร (หรือชื่อเบราว์เซอร์) แล้วกลับมากด 🔔 ใหม่</div>`;
+  const on=!!SH.sub,st=SH.set||defaultSet(),me=memberById(S.me);
+  const others=S.members.filter(m=>m.id!==S.me);
+  return head+`
+    <div class="nf-top ${on?'on':''}"><span class="ib">${icon('bell')}</span><div><b>${on?'เปิดแจ้งเตือนอยู่':'ยังไม่ได้เปิดแจ้งเตือน'}</b><div class="muted">${me?'เครื่องนี้ของ '+esc(me.name):'เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน'}</div></div>
+      ${on?`<button class="btn" type="button" data-nf="off" ${SH.busy?'disabled':''}>ปิด</button>`:`<button class="btn primary" type="button" data-nf="on" ${SH.busy||!me?'disabled':''}>${SH.busy?'กำลังเปิด…':'เปิดแจ้งเตือน'}</button>`}</div>
+    ${SH.msg?`<div class="saved" style="color:var(--fg)">${esc(SH.msg)}</div>`:''}
+    <div class="secl">เวลาเตือน</div>
+    <div class="nf-list">
+      <button type="button" class="nf-row" data-nft="evening" aria-pressed="${st.evening}" ${on?'':'disabled'}><span class="ib t-N">${icon('N')}</span><span class="tx"><b>18:00 น.</b><span class="muted">เตือนเวรพรุ่งนี้</span></span><span class="sw2"></span></button>
+      <button type="button" class="nf-row" data-nft="morning" aria-pressed="${st.morning}" ${on?'':'disabled'}><span class="ib t-M">${icon('M')}</span><span class="tx"><b>07:00 น.</b><span class="muted">เตือนเวรวันนี้</span></span><span class="sw2"></span></button>
+    </div>
+    <div class="secl">เวรของใครบ้าง <span>ของคุณเองจะขึ้นก่อนเสมอ</span></div>
+    <div class="chips">${others.length?others.map(m=>`<button type="button" class="pchip" data-nff="${esc(m.id)}" aria-pressed="${st.follow.includes(m.id)}" ${on?'':'disabled'}>${av(m)}${esc(m.name)}</button>`).join(''):'<span class="muted">ยังไม่มีสมาชิกคนอื่น</span>'}</div>
+    <div class="nf-ex"><div class="muted" style="font-size:.76rem">ตัวอย่างแจ้งเตือน</div><b>🌙 พรุ่งนี้: เวรเช้า 08–16</b><br>• ฉัน: เวรเช้า 08–16<br>• เพื่อน: เวรดึก 00–08 + เวรเช้า (แทน ×1.5) 08–16</div>
+    <div class="btnrow" style="justify-content:space-between;align-items:center"><span class="muted" style="font-size:.78rem">ถ้าวันนั้นไม่มีใครมีเวร จะไม่ส่ง</span><button class="btn" type="button" data-nf="test" ${on&&!SH.busy?'':'disabled'}>ส่งทดสอบ</button></div>`;
+}
+document.addEventListener('click',e=>{
+  if(!SH||SH.kind!=='notify') return;
+  const b=e.target.closest('[data-nf],[data-nft],[data-nff]');if(!b||b.disabled) return;
+  if(b.dataset.nf==='on') return enablePush();
+  if(b.dataset.nf==='off') return disablePush();
+  if(b.dataset.nf==='test') return testPush();
+  const st=SH.set=SH.set||defaultSet();
+  if(b.dataset.nft) st[b.dataset.nft]=!st[b.dataset.nft];
+  if(b.dataset.nff){const id=b.dataset.nff;st.follow=st.follow.includes(id)?st.follow.filter(x=>x!==id):st.follow.concat(id)}
+  drawSheet();saveNotify().catch(()=>toast('บันทึกการตั้งค่าไม่สำเร็จ'));
+});
+$('notifyBtn').onclick=openNotify;
+
 $('patternBtn').onclick=openPattern;
 $('allBtn').onclick=()=>{S.showAll=!S.showAll;lsSet('roster.all',S.showAll?'1':'0');renderMain()};
 $('paintBtn').onclick=()=>{if(!memberById(S.me)){toast('เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน');return}S.paintOn=true;S.paint=S.paint||'R:M';drawPaint();renderCal()};
@@ -1154,6 +1282,7 @@ async function start(){
   const saved=lsGet('roster.code');
   if(saved) await enter(saved); else {$('gate').hidden=false;$('codeIn').focus()}
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) softReload()});
+  if(pushState()==='ok') currentSub().then(sub=>updateBell(!!sub)).catch(()=>{});
   setInterval(()=>{if(!document.hidden) loadData()},60000);
 }
 start();
