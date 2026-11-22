@@ -410,6 +410,17 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
 .nf-row[aria-pressed=true] .sw2::after{transform:translateX(18px)}
 .pchip:disabled{opacity:.4;cursor:not-allowed}
 .nf-ex{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:.84rem;line-height:1.5}
+/* text-only shift chips (no icons) */
+.cal .tag .ico,.legend .tag .ico,.orow .tag .ico,.breakdown .tag .ico{display:none}
+.cal .tag{padding:2px 8px;font-weight:500;font-size:.8rem}
+.cal .tag.mv .ar{margin:0 1px}
+.cell.txt{font-size:.72rem;font-weight:700;color:color-mix(in oklab,var(--tc) 70%,var(--fg))}
+.cell.txt.cv.r15{color:var(--r15-fg)}.cell.txt.cv.r30{color:var(--r30-fg)}
+@media (max-width:620px){
+  .cal .tag .tx{display:inline}
+  .cal .tag{padding:1px 4px;font-size:.66rem;white-space:normal;line-height:1.25;max-width:100%}
+  .cal .tag.mv{flex-wrap:wrap}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -799,10 +810,10 @@ function renderGrid(){
     body+=`<tr><td class="nm"><span>${av(m,'sm')}${esc(m.name)}</span></td>`;
     for(let d=1;d<=n;d++){const date=ymd(S.y,S.m,d),dd=dayOf(m.id,date);
       let inner='';
-      if(dd.worked.length===1){const w=dd.worked[0];inner=`<span class="cell t-${w.c}${w.k==='C'?' cv '+rc(w.rate):''}">${icon(w.c)}</span>`}
+      if(dd.worked.length===1){const w=dd.worked[0];inner=`<span class="cell txt t-${w.c}${w.k==='C'?' cv '+rc(w.rate):''}">${ABBR[w.c]||SHORT(w.c)[0]}</span>`}
       else if(dd.worked.length>1){inner=`<span class="cell multi t-${dd.worked[0].c}">${dd.worked.map(w=>ABBR[w.c]||SHORT(w.c)[0]).join('')}</span>`}
-      else if(dd.missed.length){inner=`<span class="cell t-${dd.missed[0].away}">${icon(dd.missed[0].away)}</span>`}
-      else if(dd.acts.length){inner=`<span class="cell t-${dd.acts[0]}">${icon(dd.acts[0])}</span>`}
+      else if(dd.missed.length){inner=`<span class="cell txt t-${dd.missed[0].away}">${SHORT(dd.missed[0].away).slice(0,2)}</span>`}
+      else if(dd.acts.length){inner=`<span class="cell txt t-${dd.acts[0]}">${SHORT(dd.acts[0]).slice(0,2)}</span>`}
       const wd2=new Date(S.y,S.m,d).getDay();
       body+=`<td class="c${HOLIDAYS[date]?' hol':wd2===0||wd2===6?' we':''}" data-date="${date}" data-mid="${esc(m.id)}" title="${esc(dayText(dd))}">${inner}</td>`}
     body+='</tr>';
