@@ -757,7 +757,7 @@ function renderToday(){
   const el=$('todayCard');
   if(!S.members.length){el.hidden=true;return}
   const d=new Date();el.hidden=false;
-  el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]}</h2></div>
+  el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]} พ.ศ. ${d.getFullYear()+543}</h2></div>
    <div class="tlist">${S.members.map(m=>{const t=dayText(dayOf(m.id,todayStr),true);
      return `<div class="tperson">${av(m)}<div><div class="nm">${esc(m.name)}</div><div class="st">${t||'ยังไม่ได้ลง'}</div></div></div>`}).join('')}</div>`;
 }
@@ -909,7 +909,7 @@ function drawSheet(){
   if(SH.kind==='day'){
     const dt=parse(SH.date);
     inner=`<div class="shead"><button class="iconbtn" type="button" data-dstep="-1" aria-label="วันก่อน"><svg class="ico" style="font-size:1.3rem"><use href="#i-left"/></svg></button>
-      <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]}${HOLIDAYS[SH.date]?`<span class="shol">${esc(HOLIDAYS[SH.date])}</span>`:''}</h3>
+      <h3>${DOWF[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]} ${dt.getFullYear()+543}${HOLIDAYS[SH.date]?`<span class="shol">${esc(HOLIDAYS[SH.date])}</span>`:''}</h3>
       <button class="iconbtn" type="button" data-dstep="1" aria-label="วันถัดไป"><svg class="ico" style="font-size:1.3rem"><use href="#i-right"/></svg></button></div>
       ${S.members.length?`<div class="who-row">${S.members.map(m=>`<button type="button" class="whob" data-who="${esc(m.id)}" aria-pressed="${m.id===SH.mid}">${av(m)}<span>${esc(m.name)}</span></button>`).join('')}</div>
       <div id="dayBody" style="display:flex;flex-direction:column;gap:14px"></div>
