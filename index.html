@@ -421,6 +421,28 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
   .cal .tag{padding:1px 4px;font-size:.66rem;white-space:normal;line-height:1.25;max-width:100%}
   .cal .tag.mv{flex-wrap:wrap}
 }
+/* groups */
+.gsw{display:flex;align-items:center;gap:6px;padding:4px 8px 4px 0;border-radius:10px;min-width:0;text-align:left}
+.gh{min-width:0;flex:1 1 auto}
+.gsw{font:inherit;font-weight:700;color:var(--fg);max-width:100%}
+#groupName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.gsw .ico{flex:none;color:var(--muted);font-size:1.1rem}
+.gsw:hover .ico{color:var(--fg)}
+.gate-alt{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.88rem}
+.fl{display:flex;flex-direction:column;gap:6px;font-size:.88rem;font-weight:500}
+.glist{display:flex;flex-direction:column;gap:8px}
+.gitem{background:var(--soft);border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:2px;border:2px solid transparent}
+.gitem.cur{border-color:var(--accent);background:var(--accent-soft)}
+.gpick{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px;border-radius:10px;text-align:left}
+.gpick .ico{color:var(--accent);font-size:1.2rem}
+.gav{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:var(--accent-fg);font-weight:700}
+.gtx{display:flex;flex-direction:column;line-height:1.3;min-width:0}
+.gtx b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gact{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 8px 6px 56px;font-size:.8rem}
+.gact .linkbtn{font-size:.8rem}
+.linkbtn.danger{color:var(--t-SL)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--fg)}
+.gbtns{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -443,6 +465,8 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
   <symbol id="i-KL" viewBox="0 0 24 24"><path d="M12 3c-3.2 4.2-6 7.3-6 10.6a6 6 0 0 0 12 0C18 10.3 15.2 7.2 12 3z"/><path d="M12 11v5M9.8 14l2.2 2.2 2.2-2.2"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M6 11H5v10h14V11h-1"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14.2c2.3.6 3.5 2.6 3.5 5.8"/></symbol>
@@ -459,11 +483,21 @@ h1,h2,h3{margin:0;text-wrap:balance;font-weight:700}
     <input class="field" id="codeIn" type="password" autocomplete="current-password" placeholder="รหัสกลุ่ม" required>
     <div class="err" id="gateErr"></div>
     <button class="btn primary" type="submit" id="gateBtn">เข้าใช้งาน</button>
+    <div class="gate-alt"><span class="muted">ยังไม่มีกลุ่ม?</span> <button type="button" class="linkbtn" id="gateNew">สร้างกลุ่มใหม่</button></div>
+    <button type="button" class="linkbtn" id="gateBack" hidden>← กลับไปกลุ่มเดิม</button>
+  </form>
+  <form class="box" id="newForm" hidden>
+    <h1>สร้างกลุ่มใหม่</h1>
+    <label class="fl">ชื่อกลุ่ม<input class="field" id="ngName" type="text" maxlength="40" placeholder="เช่น ทีมไต, บ้านเรา" required></label>
+    <label class="fl">รหัสกลุ่ม <span class="muted">(อย่างน้อย 6 ตัว ใช้แชร์ให้เพื่อน)</span><input class="field" id="ngCode" type="text" maxlength="64" autocomplete="off" placeholder="ตั้งให้เดายาก เช่น kaew-team-2569" required></label>
+    <div class="err" id="ngErr"></div>
+    <button class="btn primary" type="submit" id="ngBtn">สร้างกลุ่ม</button>
+    <button type="button" class="linkbtn" id="ngCancel">← มีรหัสอยู่แล้ว</button>
   </form>
 </div>
 <div class="wrap" id="app" hidden>
   <header class="head">
-    <h1>ตารางเวรของเรา</h1>
+    <h1 class="gh"><button type="button" class="gsw" id="groupBtn" aria-label="สลับกลุ่ม"><span id="groupName">ตารางเวรของเรา</span><svg class="ico"><use href="#i-down"/></svg></button></h1>
     <div class="who">
       <label for="meSel" class="muted">ฉันคือ</label>
       <select id="meSel"></select>
@@ -614,13 +648,20 @@ function ini(n){const s=[...String(n||'').trim()];let i=0;while(i<s.length-1&&'�
 const av=(m,cls='')=>`<span class="av ${cls}" style="--pc:${esc(m.color)}">${esc(ini(m.name))}</span>`;
 const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
 
-const S={members:[],entries:new Map(),me:lsGet('roster.me')||'',showAll:lsGet('roster.all')==='1',view:lsGet('roster.view')||'cal',
+const S={members:[],entries:new Map(),me:'',groupName:'',showAll:lsGet('roster.all')==='1',view:lsGet('roster.view')||'cal',
   y:now.getFullYear(),m:now.getMonth(),paint:null,paintOn:false,gridSel:null,loaded:false,sb:null,code:'',ch:null,dirty:0};
 if(!['cal','grid','sum'].includes(S.view)) S.view='cal';
 
 function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;t.classList.toggle('up',S.paintOn);clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2400)}
 function status(html){const s=$('status');if(!html){s.hidden=true;return}s.innerHTML=html;s.hidden=false}
 const memberById=id=>S.members.find(m=>m.id===id);
+/* ---------- หลายกลุ่ม: จำรหัสไว้ในเครื่อง ---------- */
+function savedGroups(){try{return JSON.parse(lsGet('roster.groups')||'[]').filter(g=>g&&g.code)}catch(e){return []}}
+function saveGroups(list){lsSet('roster.groups',JSON.stringify(list))}
+function rememberGroup(code,name){const l=savedGroups().filter(g=>g.code!==code);l.unshift({code,name:name||''});saveGroups(l)}
+function forgetGroup(code){saveGroups(savedGroups().filter(g=>g.code!==code))}
+function setMe(id){lsSet('roster.me.'+S.code,id||'')}
+function getMe(code){return lsGet('roster.me.'+code)||''}
 // เลือกชื่อที่ "ฉันคือ" แล้ว = ปฏิทินแสดงเฉพาะคนนั้น (กด "ดูทุกคน" เพื่อดูรวม)
 const viewMembers=()=>{const me=memberById(S.me);return me&&!S.showAll?[me]:S.members};
 
@@ -757,7 +798,7 @@ function renderToday(){
   const el=$('todayCard');
   if(!S.members.length){el.hidden=true;return}
   const d=new Date();el.hidden=false;
-  el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]} พ.ศ. ${d.getFullYear()+543}</h2></div>
+  el.innerHTML=`<div><div class="lbl">วันนี้</div><h2>วัน${DOWF[d.getDay()]}ที่ ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()+543}</h2></div>
    <div class="tlist">${S.members.map(m=>{const t=dayText(dayOf(m.id,todayStr),true);
      return `<div class="tperson">${av(m)}<div><div class="nm">${esc(m.name)}</div><div class="st">${t||'ยังไม่ได้ลง'}</div></div></div>`}).join('')}</div>`;
 }
@@ -921,6 +962,7 @@ function drawSheet(){
   if(SH.kind==='pattern') inner=patternHtml();
   if(SH.kind==='members') inner=membersHtml();
   if(SH.kind==='notify') inner=notifyHtml();
+  if(SH.kind==='groups') inner=groupsHtml();
   $('sheetHost').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`;
   if(SH.kind==='day') drawDayBody();
 }
@@ -1027,14 +1069,14 @@ function membersHtml(){
       <div class="colors">${PCOLORS.map(c=>`<button type="button" class="sw" style="background:${c}" data-sw="${c}" aria-pressed="${SH.color===c}" aria-label="เลือกสี"></button>`).join('')}</div>
     </div>
     <div class="muted">ให้เพื่อนลงเวรเอง: ส่งลิงก์เว็บนี้พร้อมรหัสกลุ่มให้เพื่อน</div>
-    <button type="button" class="linkbtn" id="logoutBtn">ออกจากกลุ่มในเครื่องนี้</button>`;
+    <button type="button" class="linkbtn" id="logoutBtn">เอากลุ่มนี้ออกจากเครื่องนี้</button>`;
 }
 async function addMember(){
   const name=$('mName').value.trim();if(!name){$('mName').focus();return}
   if(!guard()) return;
   try{
     const id=await rpc('roster_add_member',{p_name:name,p_color:SH.color});
-    if(!S.me){S.me=id;lsSet('roster.me',S.me)}
+    if(!S.me){S.me=id;setMe(S.me)}
     if(S.gridSel) S.gridSel.add(id);
     ping();await loadData(true);
     SH.name='';SH.color=PCOLORS[S.members.length%PCOLORS.length];toast(`เพิ่ม ${name} แล้ว`);drawSheet();
@@ -1103,8 +1145,8 @@ function commitNote(){
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='noteIn') commitNote();
-  if(t.id==='meSel'){S.me=t.value;lsSet('roster.me',S.me);render();
-    if(pushState()==='ok') currentSub().then(async sub=>{if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});await rpc('roster_push_save',{p_endpoint:sub.endpoint,p_p256dh:sub.toJSON().keys.p256dh,p_auth:sub.toJSON().keys.auth,p_me:S.me||null,p_follow:(r||defaultSet()).follow,p_evening:(r||defaultSet()).evening,p_morning:(r||defaultSet()).morning,p_ua:''})}}).catch(()=>{})}
+  if(t.id==='meSel'){S.me=t.value;setMe(S.me);render();
+    if(pushState()==='ok') currentSub().then(async sub=>{if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});if(!r) return;await rpc('roster_push_save',{p_endpoint:sub.endpoint,p_p256dh:sub.toJSON().keys.p256dh,p_auth:sub.toJSON().keys.auth,p_me:S.me||null,p_follow:(r||defaultSet()).follow,p_evening:(r||defaultSet()).evening,p_morning:(r||defaultSet()).morning,p_ua:''})}}).catch(()=>{})}
   if(t.id==='pStart'){SH.start=t.value;SH.confirm=false;drawSheet()}
   if(t.id==='pEnd'){SH.end=t.value;SH.confirm=false;drawSheet()}
 });
@@ -1139,13 +1181,13 @@ async function openNotify(){
   try{
     const sub=await currentSub();if(!SH||SH.kind!=='notify') return;
     SH.sub=sub;
-    if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});SH.set=r||null}
+    if(sub){const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});SH.set=r||null;SH.on=!!r}
   }catch(e){}
   if(SH&&SH.kind==='notify') drawSheet();
 }
 function defaultSet(){return {follow:S.members.map(m=>m.id).filter(id=>id!==S.me),evening:true,morning:true}}
 async function saveNotify(){
-  if(!SH.sub) return;
+  if(!SH.sub) return;if(SH.on===false&&SH.set===null) return;
   const j=SH.sub.toJSON();const st=SH.set||defaultSet();
   await rpc('roster_push_save',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_me:S.me||null,p_follow:st.follow,p_evening:st.evening,p_morning:st.morning,p_ua:navigator.userAgent.slice(0,200)});
   updateBell(true);
@@ -1159,17 +1201,22 @@ async function enablePush(){
     const reg=await swReg();await navigator.serviceWorker.ready;
     const sub=(await reg.pushManager.getSubscription())||(await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)}));
     SH.sub=sub;SH.set=SH.set||defaultSet();
-    await saveNotify();
+    await saveNotify();SH.on=true;
     SH.busy=false;SH.msg='เปิดแจ้งเตือนแล้ว ✓';drawSheet();
   }catch(e){SH.busy=false;SH.msg='เปิดแจ้งเตือนไม่สำเร็จ '+(String(e&&e.message||'').includes('roster_push')?'(ยังไม่ได้รัน supabase-update-v5.sql)':'ลองอีกครั้ง');drawSheet()}
 }
-async function disablePush(){
+async function disablePush(){      // ปิดเฉพาะกลุ่มนี้ กลุ่มอื่นบนเครื่องนี้ยังรับอยู่
   SH.busy=true;drawSheet();
-  try{const sub=SH.sub||await currentSub();if(sub){try{await rpc('roster_push_delete',{p_endpoint:sub.endpoint})}catch(e){}await sub.unsubscribe()}}catch(e){}
-  SH.sub=null;SH.set=null;SH.busy=false;SH.msg='ปิดแจ้งเตือนบนเครื่องนี้แล้ว';updateBell(false);drawSheet();
+  try{const sub=SH.sub||await currentSub();if(sub) await rpc('roster_push_delete',{p_endpoint:sub.endpoint})}catch(e){}
+  SH.set=null;SH.on=false;SH.busy=false;SH.msg='ปิดแจ้งเตือนของกลุ่มนี้แล้ว';updateBell(false);drawSheet();
+}
+async function refreshBell(){
+  updateBell(false);
+  if(pushState()!=='ok'||!S.code) return;
+  try{const sub=await currentSub();if(!sub) return;const r=await rpc('roster_push_get',{p_endpoint:sub.endpoint});updateBell(!!r)}catch(e){}
 }
 async function testPush(){
-  if(!SH.sub) return;SH.busy=true;SH.msg='';drawSheet();
+  if(!SH.sub||!SH.on) return;SH.busy=true;SH.msg='';drawSheet();
   try{
     const {data,error}=await S.sb.functions.invoke('roster-notify',{body:{slot:'test',code:S.code,endpoint:SH.sub.endpoint}});
     SH.msg=error?'ส่งทดสอบไม่สำเร็จ (ตรวจว่าติดตั้ง Edge Function แล้ว)':data&&data.result==='sent'?'ส่งแล้ว รอสักครู่ แจ้งเตือนจะเด้งขึ้นมา':'ส่งไม่สำเร็จ ('+(data&&(data.result||data.error)||'?')+')';
@@ -1185,10 +1232,10 @@ function notifyHtml(){
       <div class="muted">ต้องใช้ iOS 16.4 ขึ้นไป · ปลอดภัย เว็บเข้าถึงข้อมูลอื่นในเครื่องไม่ได้</div></div>`;
   if(SH.state==='unsupported') return head+`<div class="notice">เบราว์เซอร์นี้ยังไม่รองรับการแจ้งเตือน ลองเปิดด้วย Chrome (Android) หรือ Safari (iPhone)</div>`;
   if(SH.state==='denied') return head+`<div class="notice"><b>แจ้งเตือนถูกปิดไว้</b><br>เปิดได้ที่ ตั้งค่าของโทรศัพท์ → การแจ้งเตือน → ตารางเวร (หรือชื่อเบราว์เซอร์) แล้วกลับมากด 🔔 ใหม่</div>`;
-  const on=!!SH.sub,st=SH.set||defaultSet(),me=memberById(S.me);
+  const on=!!SH.sub&&!!SH.on,st=SH.set||defaultSet(),me=memberById(S.me);
   const others=S.members.filter(m=>m.id!==S.me);
   return head+`
-    <div class="nf-top ${on?'on':''}"><span class="ib">${icon('bell')}</span><div><b>${on?'เปิดแจ้งเตือนอยู่':'ยังไม่ได้เปิดแจ้งเตือน'}</b><div class="muted">${me?'เครื่องนี้ของ '+esc(me.name):'เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน'}</div></div>
+    <div class="nf-top ${on?'on':''}"><span class="ib">${icon('bell')}</span><div><b>${on?'เปิดแจ้งเตือนอยู่':'ยังไม่ได้เปิดแจ้งเตือน'}</b><div class="muted">${me?'กลุ่ม '+esc(S.groupName||'นี้')+' · เครื่องนี้ของ '+esc(me.name):'เลือกชื่อตัวเองที่ "ฉันคือ" ก่อน'}</div></div>
       ${on?`<button class="btn" type="button" data-nf="off" ${SH.busy?'disabled':''}>ปิด</button>`:`<button class="btn primary" type="button" data-nf="on" ${SH.busy||!me?'disabled':''}>${SH.busy?'กำลังเปิด…':'เปิดแจ้งเตือน'}</button>`}</div>
     ${SH.msg?`<div class="saved" style="color:var(--fg)">${esc(SH.msg)}</div>`:''}
     <div class="secl">เวลาเตือน</div>
@@ -1243,6 +1290,8 @@ async function loadData(force){
     if(my!==loadSeq) return true;
     if(!force&&S.dirty>started){softReload();return true}
     S.members=(res.members||[]).filter(m=>m.name);
+    if(res.group_name&&res.group_name!==S.groupName){S.groupName=res.group_name;rememberGroup(S.code,S.groupName)}
+    $('groupName').textContent=S.groupName||'ตารางเวรของเรา';document.title=S.groupName?S.groupName+' · ตารางเวร':'ตารางเวรของเรา';
     for(const [k,e] of [...S.entries]) if(e.date>=a&&e.date<=b) S.entries.delete(k);
     (res.entries||[]).forEach(e=>S.entries.set(e.member+'_'+e.date,normalize(e)));
     if(S.gridSel) for(const id of [...S.gridSel]) if(!memberById(id)) S.gridSel.delete(id);
@@ -1261,16 +1310,32 @@ function joinChannel(gid){
   try{S.ch=S.sb.channel('roster-'+gid,{config:{broadcast:{self:false}}}).on('broadcast',{event:'changed'},softReload).subscribe()}
   catch(e){S.ch=null}
 }
-function logout(msg){
-  S.code='';lsSet('roster.code','');
-  if(S.ch){try{S.sb.removeChannel(S.ch)}catch(e){}S.ch=null}
-  S.members=[];S.entries.clear();S.loaded=false;
-  $('app').hidden=true;$('gate').hidden=false;$('gateErr').textContent=msg||'';$('codeIn').value='';
+function leaveChannel(){if(S.ch){try{S.sb.removeChannel(S.ch)}catch(e){}S.ch=null}}
+function resetGroup(){leaveChannel();S.members=[];S.entries.clear();S.loaded=false;S.gridSel=null;S.groupName=''}
+function showGate(msg,mode){
+  $('app').hidden=true;$('gate').hidden=false;
+  $('gateForm').hidden=mode==='new';$('newForm').hidden=mode!=='new';
+  $('gateErr').textContent=msg||'';$('ngErr').textContent='';$('codeIn').value='';
+  $('gateBack').hidden=!S.code;
+  setTimeout(()=>{const f=mode==='new'?$('ngName'):$('codeIn');f&&f.focus()},0);
+}
+function logout(msg){       // รหัสใช้ไม่ได้แล้ว หรือกดออกจากกลุ่ม
+  if(S.code) forgetGroup(S.code);
+  const next=savedGroups()[0];
+  resetGroup();S.code='';lsSet('roster.code','');
+  if(next&&!msg) return enter(next.code);
+  showGate(msg,'join');
 }
 async function enter(code){
-  S.code=code;status('<b>กำลังโหลดตาราง…</b>');
+  resetGroup();
+  S.code=code;lsSet('roster.code',code);S.me=getMe(code);
+  const g=savedGroups().find(x=>x.code===code);S.groupName=g&&g.name||'';
+  $('groupName').textContent=S.groupName||'ตารางเวรของเรา';
+  status('<b>กำลังโหลดตาราง…</b>');
   $('gate').hidden=true;$('app').hidden=false;render();
-  return loadData(true);
+  const ok=await loadData(true);
+  refreshBell();
+  return ok;
 }
 $('gateForm').addEventListener('submit',async e=>{
   e.preventDefault();
@@ -1279,10 +1344,61 @@ $('gateForm').addEventListener('submit',async e=>{
   try{
     const {error}=await S.sb.rpc('roster_load',{p_code:code,p_from:todayStr,p_to:todayStr});
     if(error){$('gateErr').textContent=String(error.message||'').includes('invalid_code')?'รหัสกลุ่มไม่ถูกต้อง':'เชื่อมต่อไม่ได้ ลองอีกครั้ง';return}
-    lsSet('roster.code',code);await enter(code);
+    rememberGroup(code,'');await enter(code);
   }catch(err){$('gateErr').textContent='เชื่อมต่อไม่ได้ ลองอีกครั้ง'}
   finally{$('gateBtn').disabled=false}
 });
+$('gateNew').onclick=()=>showGate('','new');
+$('ngCancel').onclick=()=>showGate('','join');
+$('gateBack').onclick=()=>{if(S.code) enter(S.code)};
+$('newForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=$('ngName').value.trim(),code=$('ngCode').value.trim();
+  if(!name||!code||!S.sb) return;
+  if(code.length<6){$('ngErr').textContent='รหัสกลุ่มต้องมีอย่างน้อย 6 ตัว';return}
+  $('ngBtn').disabled=true;$('ngErr').textContent='';
+  try{
+    const {error}=await S.sb.rpc('roster_create_group',{p_name:name,p_code:code});
+    if(error){const m=String(error.message||'');
+      $('ngErr').textContent=m.includes('code_taken')?'รหัสนี้มีคนใช้แล้ว ลองตั้งรหัสอื่น':m.includes('code_too_short')?'รหัสกลุ่มต้องมีอย่างน้อย 6 ตัว':m.includes('roster_create_group')||m.includes('function')?'ฐานข้อมูลยังเป็นรุ่นเก่า กรุณารัน supabase-update-v6.sql':m.includes('too_many')?'สร้างกลุ่มเพิ่มไม่ได้แล้ว (ครบจำนวนสูงสุด)':'สร้างกลุ่มไม่สำเร็จ ลองอีกครั้ง';return}
+    rememberGroup(code,name);await enter(code);
+    $('ngName').value='';$('ngCode').value='';
+    toast('สร้างกลุ่ม '+name+' แล้ว · เพิ่มสมาชิกได้ที่ไอคอน 👥');
+    setTimeout(openMembers,400);
+  }catch(err){$('ngErr').textContent='เชื่อมต่อไม่ได้ ลองอีกครั้ง'}
+  finally{$('ngBtn').disabled=false}
+});
+
+/* ---------- สลับกลุ่ม ---------- */
+function openGroups(){SH={kind:'groups',show:null,confirm:null};drawSheet()}
+function groupsHtml(){
+  const list=savedGroups();
+  return `<div class="shead"><span style="width:34px"></span><h3>กลุ่มของฉัน</h3><button class="iconbtn" type="button" data-close aria-label="ปิด">${icon('x')}</button></div>
+    <div class="glist">${list.map(g=>{const cur=g.code===S.code;
+      return `<div class="gitem${cur?' cur':''}">
+        <button type="button" class="gpick" data-gsw="${esc(g.code)}" ${cur?'aria-current="true"':''}><span class="gav">${esc(ini(g.name||'?'))}</span><span class="gtx"><b>${esc(g.name||'กลุ่ม')}</b><span class="muted">${cur?'กำลังดูอยู่':'แตะเพื่อสลับ'}</span></span>${cur?icon('check'):''}</button>
+        <div class="gact">
+          <button type="button" class="linkbtn" data-gcode="${esc(g.code)}">${SH.show===g.code?'รหัส: <b class="mono">'+esc(g.code)+'</b>':'ดูรหัสสำหรับชวนเพื่อน'}</button>
+          ${SH.confirm===g.code?`<span class="gconf">เอาออกจากเครื่องนี้? <button type="button" class="linkbtn" data-gno>ไม่</button> <button type="button" class="linkbtn danger" data-gdel="${esc(g.code)}">เอาออก</button></span>`:`<button type="button" class="linkbtn" data-gask="${esc(g.code)}">เอาออกจากเครื่องนี้</button>`}
+        </div></div>`}).join('')}</div>
+    <div class="gbtns"><button type="button" class="pill" data-gadd>${icon('plus')}ใส่รหัสเข้ากลุ่มอื่น</button><button type="button" class="pill primary" data-gnew>${icon('plus')}สร้างกลุ่มใหม่</button></div>
+    <div class="muted" style="font-size:.78rem">ข้อมูลแต่ละกลุ่มแยกกัน · การเอาออกจากเครื่องนี้ไม่ได้ลบกลุ่มหรือข้อมูล ใส่รหัสกลับมาได้ทุกเมื่อ</div>`;
+}
+document.addEventListener('click',e=>{
+  if(!SH||SH.kind!=='groups') return;
+  const b=e.target.closest('[data-gsw],[data-gcode],[data-gask],[data-gno],[data-gdel],[data-gadd],[data-gnew]');if(!b) return;
+  if(b.dataset.gsw!==undefined){const c=b.dataset.gsw;closeSheet();if(c!==S.code) enter(c);return}
+  if(b.dataset.gcode!==undefined){SH.show=SH.show===b.dataset.gcode?null:b.dataset.gcode;drawSheet();return}
+  if(b.dataset.gask!==undefined){SH.confirm=b.dataset.gask;drawSheet();return}
+  if(b.dataset.gno!==undefined){SH.confirm=null;drawSheet();return}
+  if(b.dataset.gdel!==undefined){const c=b.dataset.gdel;
+    if(c===S.code){closeSheet();logout('');return}
+    forgetGroup(c);SH.confirm=null;drawSheet();return}
+  if(b.dataset.gadd!==undefined){closeSheet();showGate('','join');return}
+  if(b.dataset.gnew!==undefined){closeSheet();showGate('','new');return}
+});
+$('groupBtn').onclick=openGroups;
+
 async function start(){
   if(!window.supabase||SUPABASE_URL.includes('YOUR-PROJECT')){
     $('app').hidden=false;render();
@@ -1290,10 +1406,13 @@ async function start(){
     return;
   }
   S.sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false}});
-  const saved=lsGet('roster.code');
-  if(saved) await enter(saved); else {$('gate').hidden=false;$('codeIn').focus()}
+  // ย้ายข้อมูลจากรุ่นที่จำได้กลุ่มเดียว
+  const saved=lsGet('roster.code'),oldMe=lsGet('roster.me');
+  if(saved&&!savedGroups().some(g=>g.code===saved)) rememberGroup(saved,'');
+  if(saved&&oldMe&&!getMe(saved)) lsSet('roster.me.'+saved,oldMe);
+  const first=saved||(savedGroups()[0]||{}).code;
+  if(first) await enter(first); else showGate('','join');
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) softReload()});
-  if(pushState()==='ok') currentSub().then(sub=>updateBell(!!sub)).catch(()=>{});
   setInterval(()=>{if(!document.hidden) loadData()},60000);
 }
 start();
